@@ -24,7 +24,7 @@ public class WGraph {
      */
     public class Node {
         int x, y, index, dist;
-        List<Edge> neighbors;
+        List<Edge> neighbors = new LinkedList<>();
 
         public Node(int x, int y) {
             this.x = x;
@@ -71,6 +71,12 @@ public class WGraph {
         public void setY(int y) {
             this.y = y;
         }
+
+        public boolean equals(Node v) {
+            if ((this.getX() == v.getX()) && (this.getY() == v.getY())) {
+                return true;
+            } return false;
+        }
     }
 
 
@@ -81,12 +87,21 @@ public class WGraph {
      * which represents the edge from start to end.
      */
     public class Edge {
-        Node dest;
+        Node src, dest;
         int weight;
 
-        public Edge(Node dest, int weight) {
+        public Edge(Node src, Node dest, int weight) {
+            this.src = src;
             this.dest = dest;
             this.weight = weight;
+        }
+
+        public Node getSrc() {
+            return src;
+        }
+
+        public void setSrc(Node src) {
+            this.src = src;
         }
 
         public Node getDest() {
@@ -104,9 +119,21 @@ public class WGraph {
     }
 
 
-    private List<Node> nodes;
-    private List<Edge> edges;
-    private Map<Node,List<Edge>> adj;
+    private List<Node> nodes = new LinkedList<Node>() {
+        @Override
+        public boolean contains(Object o) {
+            if(!nodes.isEmpty()) {
+                for (Node v : nodes) {
+                    if (v.equals((Node) o)) {
+                        ((Node) o).setIndex(v.getIndex());
+                        return true;
+                    }
+                }
+            } return false;
+        }
+    };
+    private List<Edge> edges = new LinkedList<>();
+    private Map<Node,List<Edge>> adj = new HashMap<>();
     private int V, E;
 
     /**
@@ -121,20 +148,35 @@ public class WGraph {
         if (FName == null)
             throw new NullPointerException("File is empty or non-existent");
 
+        populateGraph(FName);
+
+
+
+    }
+
+    /**
+     * Currently everything is working upon basic testing besides the adjacency map.
+     * However, each node will have a set of neighbors which is correct based on the edges
+     * given in the file. All that is left to do is translate that set of neighbors into an adjacency list (map)
+     * @param FName
+     */
+    private void populateGraph(String FName) {
         int ux, uy, vx, vy, wt;
         int i=0, j=0, r=0;
-
-        BufferedReader br = new BufferedReader(new StringReader(FName));
+        File inputFile = new File (FName);
 
         try {
+            FileReader fileReader = new FileReader (inputFile);
+            BufferedReader br = new BufferedReader(fileReader);
+
             String line = br.readLine();
             V = Integer.parseInt(line);
 
             line = br.readLine();
             E = Integer.parseInt(line);
 
-            while (line != null) {
-                line = br.readLine();
+            while ((line = br.readLine()) != null) {
+//                line = br.readLine();
 
 
                 // Is there a better/less redundant way to do this?
@@ -160,8 +202,7 @@ public class WGraph {
                 vy = Integer.parseInt(temp);
                 line = line.substring(line.indexOf(" ") + 1);
 
-                temp = line.substring(0, line.indexOf(" "));
-                wt = Integer.parseInt(temp);
+                wt = Integer.parseInt(line);
 
 
                 // needs a check to see if either node already exists
@@ -170,29 +211,42 @@ public class WGraph {
 
                 // If u_node does not exist, we must add it to nodes
                 // and also add it to the adjacency list as a new key-value pair
-                if (!nodes.contains(u_node)) {
+
+                Edge e = new Edge(u_node, v_node, wt);
+                edges.add(e);
+
+                for (Edge q : edges) {
+                    if (q.getSrc().equals(u_node)) {
+                        u_node.addNeighbor(q);
+                    }
+                }
+
+                if (nodes.contains(u_node)) {
+                    nodes.set(u_node.getIndex(), u_node);
+                } else {
                     u_node.setIndex(j);
                     nodes.add(u_node);
                     j++;
                 }
 
+
                 if (!nodes.contains(v_node)) {
-                    u_node.setIndex(r);
+                    v_node.setIndex(j);
                     nodes.add(v_node);
-                    r++;
+                    j++;
                 }
 
                 // Need to check if adj contains u_node or not.
                 // If so, we need to replace instead of put
-                Edge e = new Edge(v_node, wt);
 
-                if (adj.containsKey(u_node)) {
+
+
+                if (adj.isEmpty() || !adj.containsKey(u_node)) {
+                    adj.put(u_node, u_node.getNeighbors());
+                } else {
                     List<Edge> update = adj.get(u_node);
                     update.add(e);
                     adj.replace(u_node, update);
-                } else {
-                    u_node.addNeighbor(e);
-                    adj.put(u_node, u_node.getNeighbors());
                 }
 
                 i += 2;
@@ -200,12 +254,19 @@ public class WGraph {
             }
         } catch (IOException e) {
             System.out.println("Reading file data failed.");
-        }
 
+        }
     }
 
     /**
-     * Needs testing. Also needs to return correct type of ArrayList
+     * Needs testing. Also needs to return correct type of ArrayList.
+     * There must be a more efficient way to do a shortest path between two
+     * vertices. I doubt that this has the same runtime as V2S. We have to simplify it.
+     * Possibly through modified BFS? SCC?
+     *
+     *
+     * Efficiency: O(log(V)(V+E))
+     *
      * @param ux
      * @param uy
      * @param vx
@@ -213,7 +274,7 @@ public class WGraph {
      * @return
      */
 
-    public ArrayList<Integer> V2V(int ux, int uy, int vx, int vy) {
+    public int V2V(int ux, int uy, int vx, int vy) {
         Node src = new Node(ux, uy);
         Node dest = new Node(vx, vy);
 
@@ -241,6 +302,59 @@ public class WGraph {
                 if (v == dest) {
                     break;
                 }
+                if(!visited[v.index]) {
+                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
+                        v.setDist(u.getDist() + e.getWeight());
+                        visited[v.index] = true;
+                        queue.add(v);
+                    }
+                }
+            }
+        }
+
+
+        return dest.getDist();
+
+    }
+
+    /**
+     * This is just simple dijkstra's to get shortest path from source to a set of vertices.
+     * Assuming the above implementation for the shortest path from a given vertex
+     * to another vertex is correct, we must only remove the catch checking if a given
+     * adjacent vertex is equal to the destination.
+     *
+     * Efficiency: O(Log(V)(V+E))
+     *
+     * @param ux
+     * @param uy
+     * @param S
+     * @return
+     */
+    public ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
+
+        Node src = new Node(ux, uy);
+
+        ArrayList<Node> paths;
+
+        boolean[] visited = new boolean[V];
+
+        PriorityQueue<Node> queue = new PriorityQueue<>();
+
+        for(int i = 0; i < V; i++) {
+            visited[i] = false;
+        }
+
+        queue.add(src);
+        src.setDist(0);
+
+        while (!queue.isEmpty()) {
+
+            Node u = queue.poll();
+
+            List<Edge> adjacentU = adj.get(nodes.get(0));
+
+            for (Edge e : adjacentU) {
+                Node v = e.getDest();
                 if(visited[v.index]) {
                     if ((u.getDist() + e.getWeight()) < v.getDist()) {
                         v.setDist(u.getDist() + e.getWeight());
@@ -254,11 +368,25 @@ public class WGraph {
         return null;
     }
 
-    public ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
-
-        return null;
-    }
-
+    /**
+     * Travis and I discussed in class that we should do this one by keeping two sets,
+     *
+     * Create two new vertices, one for each set. Say u exists in S1 and v exists in S2
+     * Set the vertices to have a path to every edge in each set respectively,
+     * with an edge weight of 0 for all of the new edges (adjacent to u or v)
+     *
+     * Find the shortest path between edge u and v. This path represents a
+     * shortest path between some vertex in S1 and some vertex in S2.
+     *
+     * The order of the nodes in the ArrayList returned represent
+     * the shortest overall path from a vertex in set 1 to a vertex in set 2.
+     *
+     * Efficiency: O(Elog(V))
+     *
+     * @param S1
+     * @param S2
+     * @return
+     */
     public ArrayList<Integer> S2S(ArrayList<Integer> S1, ArrayList<Integer> S2) {
         return null;
     }
