@@ -22,7 +22,7 @@ public class WGraph {
      * also need to fix the public declarations
      * Usually do both of these at the end of the project
      */
-    public class Node {
+    public class Node implements Comparable<Node>{
         int x, y, index, dist;
         List<Edge> neighbors = new LinkedList<>();
 
@@ -74,8 +74,20 @@ public class WGraph {
 
         public boolean equals(Node v) {
             if ((this.getX() == v.getX()) && (this.getY() == v.getY())) {
+                this.setDist(v.getDist());
                 return true;
             } return false;
+        }
+
+        @Override
+        public int compareTo(Node v) {
+            if (this.getDist() < v.getDist()) {
+                return -1;
+            } else if (this.getDist() == v.getDist()) {
+                return 0;
+            } else {
+                return 1;
+            }
         }
     }
 
@@ -149,6 +161,7 @@ public class WGraph {
             throw new NullPointerException("File is empty or non-existent");
 
         populateGraph(FName);
+        adjPop();
 
 
 
@@ -239,16 +252,6 @@ public class WGraph {
                 // Need to check if adj contains u_node or not.
                 // If so, we need to replace instead of put
 
-
-
-                if (adj.isEmpty() || !adj.containsKey(u_node)) {
-                    adj.put(u_node, u_node.getNeighbors());
-                } else {
-                    List<Edge> update = adj.get(u_node);
-                    update.add(e);
-                    adj.replace(u_node, update);
-                }
-
                 i += 2;
 
             }
@@ -258,11 +261,16 @@ public class WGraph {
         }
     }
 
+    public void adjPop() {
+        for (Node v : nodes) {
+            if (adj.isEmpty() || !adj.containsKey(v)) {
+                adj.put(v, v.getNeighbors());
+            }
+        }
+    }
+
     /**
-     * Needs testing. Also needs to return correct type of ArrayList.
-     * There must be a more efficient way to do a shortest path between two
-     * vertices. I doubt that this has the same runtime as V2S. We have to simplify it.
-     * Possibly through modified BFS? SCC?
+     * Correctly outputs the shortest path's total weight if one exists
      *
      *
      * Efficiency: O(log(V)(V+E))
@@ -274,34 +282,29 @@ public class WGraph {
      * @return
      */
 
-    public int V2V(int ux, int uy, int vx, int vy) {
+    public ArrayList<Integer> V2V(int ux, int uy, int vx, int vy) {
         Node src = new Node(ux, uy);
         Node dest = new Node(vx, vy);
 
-        ArrayList<Node> paths;
+        ArrayList<Integer> paths = new ArrayList<>();
 
         boolean[] visited = new boolean[V];
 
         PriorityQueue<Node> queue = new PriorityQueue<>();
 
-        for(int i = 0; i < V; i++) {
-            visited[i] = false;
-        }
-
-        queue.add(src);
         src.setDist(0);
+        queue.addAll(nodes);
 
         while (!queue.isEmpty()) {
 
             Node u = queue.poll();
+            paths.add(u.getX());
+            paths.add(u.getY());
 
-            List<Edge> adjacentU = adj.get(nodes.get(0));
+            List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
 
             for (Edge e : adjacentU) {
                 Node v = e.getDest();
-                if (v == dest) {
-                    break;
-                }
                 if(!visited[v.index]) {
                     if ((u.getDist() + e.getWeight()) < v.getDist()) {
                         v.setDist(u.getDist() + e.getWeight());
@@ -309,12 +312,28 @@ public class WGraph {
                         queue.add(v);
                     }
                 }
+                if (dest.equals(v)) {
+                    paths.add(dest.getX());
+                    paths.add(dest.getY());
+                    return paths;
+                }
             }
         }
 
 
-        return dest.getDist();
+        return null;
 
+    }
+
+    public ArrayList<Node> INT2NODE(ArrayList<Integer> S) {
+        ArrayList<Node> PQ = new ArrayList<>();
+        for (int i = 0; i < S.size(); i += 2) {
+            Node v = new Node(S.get(i), S.get(i+1));
+            if (nodes.contains(v)) {
+                PQ.add(v);
+            }
+        }
+        return PQ;
     }
 
     /**
@@ -333,37 +352,49 @@ public class WGraph {
     public ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
 
         Node src = new Node(ux, uy);
+        Node dest = new Node(99, 99);
+        ArrayList<Node> minS = INT2NODE(S);
+        for (Node v : minS) {
+            Edge e = new Edge(dest, v, 0);
+            dest.addNeighbor(e);
+        }
+        adj.put(dest, dest.getNeighbors());
 
-        ArrayList<Node> paths;
+        ArrayList<Integer> paths = new ArrayList<>();
 
         boolean[] visited = new boolean[V];
 
         PriorityQueue<Node> queue = new PriorityQueue<>();
 
-        for(int i = 0; i < V; i++) {
-            visited[i] = false;
-        }
 
-        queue.add(src);
         src.setDist(0);
+        queue.addAll(nodes);
 
         while (!queue.isEmpty()) {
 
             Node u = queue.poll();
+            paths.add(u.getX());
+            paths.add(u.getY());
 
-            List<Edge> adjacentU = adj.get(nodes.get(0));
+            List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
 
             for (Edge e : adjacentU) {
                 Node v = e.getDest();
-                if(visited[v.index]) {
+                if(!visited[v.index]) {
                     if ((u.getDist() + e.getWeight()) < v.getDist()) {
                         v.setDist(u.getDist() + e.getWeight());
                         visited[v.index] = true;
                         queue.add(v);
                     }
                 }
+                if (dest.equals(v)) {
+                    paths.add(dest.getX());
+                    paths.add(dest.getY());
+                    return paths;
+                }
             }
         }
+
 
         return null;
     }
