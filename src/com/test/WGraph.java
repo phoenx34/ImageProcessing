@@ -336,6 +336,15 @@ public class WGraph {
         return PQ;
     }
 
+    public ArrayList<Integer> NODE2INT(ArrayList<Node> S) {
+        ArrayList<Integer> g = new ArrayList<>();
+        for (Node n : S) {
+            g.add(n.getX());
+            g.add(n.getY());
+        }
+        return g;
+    }
+
     /**
      * This is just simple dijkstra's to get shortest path from source to a set of vertices.
      * Assuming the above implementation for the shortest path from a given vertex
@@ -360,12 +369,26 @@ public class WGraph {
         }
         adj.put(dest, dest.getNeighbors());
 
-        ArrayList<Integer> paths = new ArrayList<>();
+        ArrayList<Node> paths = new ArrayList<>();
 
         boolean[] visited = new boolean[V];
 
+        Comparator<ArrayList<Node>> g = new Comparator<ArrayList<Node>>() {
+            @Override
+            public int compare(ArrayList<Node> path1, ArrayList<Node> path2) {
+                if (path1.get(path1.size() - 1).getDist() < path2.get(path2.size() - 1).getDist()) {
+                    return -1;
+                } else if (path1.get(path1.size() - 1).getDist() == path2.get(path2.size() - 1).getDist()) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        };
+
         PriorityQueue<Node> queue = new PriorityQueue<>();
 
+        PriorityQueue<ArrayList<Node>> q = new PriorityQueue<>(S.size(), g);
 
         src.setDist(0);
         queue.addAll(nodes);
@@ -373,30 +396,28 @@ public class WGraph {
         while (!queue.isEmpty()) {
 
             Node u = queue.poll();
-            paths.add(u.getX());
-            paths.add(u.getY());
+            paths.add(u);
 
             List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
 
             for (Edge e : adjacentU) {
                 Node v = e.getDest();
-                if(!visited[v.index]) {
+                if (!visited[v.index]) {
                     if ((u.getDist() + e.getWeight()) < v.getDist()) {
                         v.setDist(u.getDist() + e.getWeight());
                         visited[v.index] = true;
                         queue.add(v);
                     }
                 }
-                if (dest.equals(v)) {
-                    paths.add(dest.getX());
-                    paths.add(dest.getY());
-                    return paths;
+                if (S.contains(v)) {
+                    paths.add(dest);
+                    q.add(paths);
                 }
             }
         }
 
-
-        return null;
+        paths = q.poll();
+        return NODE2INT(paths);
     }
 
     /**
