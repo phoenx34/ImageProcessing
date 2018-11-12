@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class WGraph {
 
-
+private HashMap<Coordinate, Node> hm;
 
     /**
      * This class consists of an x and y coordinate,
@@ -476,7 +476,7 @@ public class WGraph {
          * Christian's attempt
          */
 
-        HashSet<Node> set = toNO
+        HashSet<Node> set = putNodeInSet(S);
     }
 
     /**
@@ -524,8 +524,12 @@ public class WGraph {
         while(it.hasNext())
         {
             Integer x = it.next();
-            Integer y - it.next();
-            //hset.add(this.g)f
+            Integer y = it.next();
+            hset.add(hm.get(new Coordinate(x, y)));
         }
+
+        return hset;
     }
+
+
 }
