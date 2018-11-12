@@ -14,6 +14,8 @@ import java.util.*;
  */
 public class WGraph {
 
+
+
     /**
      * This class consists of an x and y coordinate,
      * and a list of all adjacent vertices to this node.
@@ -130,6 +132,10 @@ public class WGraph {
 
     }
 
+    public class Coordinate
+    {
+        
+    }
 
     private List<Node> nodes = new LinkedList<Node>() {
         @Override
@@ -473,7 +479,7 @@ public class WGraph {
         {
             Integer x = it.next();
             Integer y - it.next();
-            hset.add(this.g)
+            //hset.add(this.g)f
         }
     }
 }
