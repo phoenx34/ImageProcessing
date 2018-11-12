@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
+
 /**
  * This class takes a file name as input, and scans that file for data.
  * It represents the data in the file as a graph.
@@ -33,6 +34,8 @@ private HashMap<Coordinate, Node> hm;
             this.y = y;
             dist = Integer.MAX_VALUE;
         }
+
+
 
         public int getDist() {
             return dist;
@@ -412,71 +415,71 @@ private HashMap<Coordinate, Node> hm;
      */
     public ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
 
-//        Node src = new Node(ux, uy);
-//        Node dest = new Node(99, 99);
-//        ArrayList<Node> minS = INT2NODE(S);
-//        for (Node v : minS) {
-//            Edge e = new Edge(dest, v, 0);
-//            dest.addNeighbor(e);
-//        }
-//        adj.put(dest, dest.getNeighbors());
-//
-//        ArrayList<Node> paths = new ArrayList<>();
-//
-//        boolean[] visited = new boolean[V];
-//
-//        Comparator<ArrayList<Node>> g = new Comparator<ArrayList<Node>>() {
-//            @Override
-//            public int compare(ArrayList<Node> path1, ArrayList<Node> path2) {
-//                if (path1.get(path1.size() - 1).getDist() < path2.get(path2.size() - 1).getDist()) {
-//                    return -1;
-//                } else if (path1.get(path1.size() - 1).getDist() == path2.get(path2.size() - 1).getDist()) {
-//                    return 0;
-//                } else {
-//                    return 1;
-//                }
-//            }
-//        };
-//
-//        PriorityQueue<Node> queue = new PriorityQueue<>();
-//
-//        PriorityQueue<ArrayList<Node>> q = new PriorityQueue<>(S.size(), g);
-//
-//        src.setDist(0);
-//        queue.addAll(nodes);
-//
-//        while (!queue.isEmpty()) {
-//
-//            Node u = queue.poll();
-//            paths.add(u);
-//
-//            List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
-//
-//            for (Edge e : adjacentU) {
-//                Node v = e.getDest();
-//                if (!visited[v.index]) {
-//                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
-//                        v.setDist(u.getDist() + e.getWeight());
-//                        visited[v.index] = true;
-//                        queue.add(v);
-//                    }
-//                }
-//                if (S.contains(v)) {
-//                    paths.add(dest);
-//                    q.add(paths);
-//                }
-//            }
-//        }
-//
-//        paths = q.poll();
-//        return NODE2INT(paths);
+        Node src = new Node(ux, uy);
+        Node dest = new Node(99, 99);
+        ArrayList<Node> minS = INT2NODE(S);
+        for (Node v : minS) {
+            Edge e = new Edge(dest, v, 0);
+            dest.addNeighbor(e);
+        }
+        adj.put(dest, dest.getNeighbors());
+
+        ArrayList<Node> paths = new ArrayList<>();
+
+        boolean[] visited = new boolean[V];
+
+        Comparator<ArrayList<Node>> g = new Comparator<ArrayList<Node>>() {
+            @Override
+            public int compare(ArrayList<Node> path1, ArrayList<Node> path2) {
+                if (path1.get(path1.size() - 1).getDist() < path2.get(path2.size() - 1).getDist()) {
+                    return -1;
+                } else if (path1.get(path1.size() - 1).getDist() == path2.get(path2.size() - 1).getDist()) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        };
+
+        PriorityQueue<Node> queue = new PriorityQueue<>();
+
+        PriorityQueue<ArrayList<Node>> q = new PriorityQueue<>(S.size(), g);
+
+        src.setDist(0);
+        queue.addAll(nodes);
+
+        while (!queue.isEmpty()) {
+
+            Node u = queue.poll();
+            paths.add(u);
+
+            List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
+
+            for (Edge e : adjacentU) {
+                Node v = e.getDest();
+                if (!visited[v.index]) {
+                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
+                        v.setDist(u.getDist() + e.getWeight());
+                        visited[v.index] = true;
+                        queue.add(v);
+                    }
+                }
+                if (S.contains(v)) {
+                    paths.add(dest);
+                    q.add(paths);
+                }
+            }
+        }
+
+        paths = q.poll();
+       return NODE2INT(paths);
 
 
         /**
          * Christian's attempt
          */
 
-        HashSet<Node> set = putNodeInSet(S);
+       // HashSet<Node> set = putNodeInSet(S);
     }
 
     /**
@@ -499,22 +502,22 @@ private HashMap<Coordinate, Node> hm;
      * @return
      */
     public ArrayList<Integer> S2S(ArrayList<Integer> S1, ArrayList<Integer> S2) {
+//        LinkedList<Node> listS1 = this.putNodeInSet(S1);
+//        LinkedList<Node> listS2 = this.putNodeInSet(S2);
+
+
+
+
         return null;
     }
 
 
 
-//    private PriorityQueue makeAHeap(int x, int y)
-//    {
-//        PriorityQueue pq = new PriorityQueue(this.nodes.size());
-//
-//        for(int i = 0 ; i < this.nodes.size(); i++)
-//        {
-//
-//        }
-//
-//    }
 
+
+
+
+    //This is probably unnecessary at this point
 
     private HashSet<Node> putNodeInSet(ArrayList<Integer> S)
     {
@@ -531,5 +534,7 @@ private HashMap<Coordinate, Node> hm;
         return hset;
     }
 
+
+//    private LinkedList<Node> putNodeInList(Array)
 
 }
