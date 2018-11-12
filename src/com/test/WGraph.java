@@ -360,64 +360,71 @@ public class WGraph {
      */
     public ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
 
-        Node src = new Node(ux, uy);
-        Node dest = new Node(99, 99);
-        ArrayList<Node> minS = INT2NODE(S);
-        for (Node v : minS) {
-            Edge e = new Edge(dest, v, 0);
-            dest.addNeighbor(e);
-        }
-        adj.put(dest, dest.getNeighbors());
+//        Node src = new Node(ux, uy);
+//        Node dest = new Node(99, 99);
+//        ArrayList<Node> minS = INT2NODE(S);
+//        for (Node v : minS) {
+//            Edge e = new Edge(dest, v, 0);
+//            dest.addNeighbor(e);
+//        }
+//        adj.put(dest, dest.getNeighbors());
+//
+//        ArrayList<Node> paths = new ArrayList<>();
+//
+//        boolean[] visited = new boolean[V];
+//
+//        Comparator<ArrayList<Node>> g = new Comparator<ArrayList<Node>>() {
+//            @Override
+//            public int compare(ArrayList<Node> path1, ArrayList<Node> path2) {
+//                if (path1.get(path1.size() - 1).getDist() < path2.get(path2.size() - 1).getDist()) {
+//                    return -1;
+//                } else if (path1.get(path1.size() - 1).getDist() == path2.get(path2.size() - 1).getDist()) {
+//                    return 0;
+//                } else {
+//                    return 1;
+//                }
+//            }
+//        };
+//
+//        PriorityQueue<Node> queue = new PriorityQueue<>();
+//
+//        PriorityQueue<ArrayList<Node>> q = new PriorityQueue<>(S.size(), g);
+//
+//        src.setDist(0);
+//        queue.addAll(nodes);
+//
+//        while (!queue.isEmpty()) {
+//
+//            Node u = queue.poll();
+//            paths.add(u);
+//
+//            List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
+//
+//            for (Edge e : adjacentU) {
+//                Node v = e.getDest();
+//                if (!visited[v.index]) {
+//                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
+//                        v.setDist(u.getDist() + e.getWeight());
+//                        visited[v.index] = true;
+//                        queue.add(v);
+//                    }
+//                }
+//                if (S.contains(v)) {
+//                    paths.add(dest);
+//                    q.add(paths);
+//                }
+//            }
+//        }
+//
+//        paths = q.poll();
+//        return NODE2INT(paths);
 
-        ArrayList<Node> paths = new ArrayList<>();
 
-        boolean[] visited = new boolean[V];
+        /**
+         * Christian's attempt
+         */
 
-        Comparator<ArrayList<Node>> g = new Comparator<ArrayList<Node>>() {
-            @Override
-            public int compare(ArrayList<Node> path1, ArrayList<Node> path2) {
-                if (path1.get(path1.size() - 1).getDist() < path2.get(path2.size() - 1).getDist()) {
-                    return -1;
-                } else if (path1.get(path1.size() - 1).getDist() == path2.get(path2.size() - 1).getDist()) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            }
-        };
-
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-
-        PriorityQueue<ArrayList<Node>> q = new PriorityQueue<>(S.size(), g);
-
-        src.setDist(0);
-        queue.addAll(nodes);
-
-        while (!queue.isEmpty()) {
-
-            Node u = queue.poll();
-            paths.add(u);
-
-            List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
-
-            for (Edge e : adjacentU) {
-                Node v = e.getDest();
-                if (!visited[v.index]) {
-                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
-                        v.setDist(u.getDist() + e.getWeight());
-                        visited[v.index] = true;
-                        queue.add(v);
-                    }
-                }
-                if (S.contains(v)) {
-                    paths.add(dest);
-                    q.add(paths);
-                }
-            }
-        }
-
-        paths = q.poll();
-        return NODE2INT(paths);
+        HashSet<Node> set = toNO
     }
 
     /**
@@ -445,14 +452,28 @@ public class WGraph {
 
 
 
-    private PriorityQueue makeAHeap(int x, int y)
+//    private PriorityQueue makeAHeap(int x, int y)
+//    {
+//        PriorityQueue pq = new PriorityQueue(this.nodes.size());
+//
+//        for(int i = 0 ; i < this.nodes.size(); i++)
+//        {
+//
+//        }
+//
+//    }
+
+
+    private HashSet<Node> putNodeInSet(ArrayList<Integer> S)
     {
-        PriorityQueue pq = new PriorityQueue(this.nodes.size());
+        Iterator<Integer> it = S.iterator();
+        HashSet<Node> hset = new HashSet<Node>();
 
-        for(int i = 0 ; i < this.nodes.size(); i++)
+        while(it.hasNext())
         {
-            
+            Integer x = it.next();
+            Integer y - it.next();
+            hset.add(this.g)
         }
-
     }
 }
