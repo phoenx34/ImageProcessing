@@ -416,44 +416,37 @@ private HashMap<Coordinate, Node> hm;
     public ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
 
         Node src = new Node(ux, uy);
-        Node dest = new Node(99, 99);
-        ArrayList<Node> minS = INT2NODE(S);
-        for (Node v : minS) {
-            Edge e = new Edge(dest, v, 0);
-            dest.addNeighbor(e);
-        }
-        adj.put(dest, dest.getNeighbors());
 
-        ArrayList<Node> paths = new ArrayList<>();
+        Set<Node> p = new HashSet<>();
+        Integer minCost = -1;
+        ArrayList<Integer> curPath = new ArrayList<>();
+        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<Integer, ArrayList<Integer>>();
+        for (Integer i = 0; i < S.size(); i+=2) {
+            Node d = new Node(S.get(i), S.get(i+1));
+            p.add(d);
+        }
 
         boolean[] visited = new boolean[V];
 
-        Comparator<ArrayList<Node>> g = new Comparator<ArrayList<Node>>() {
-            @Override
-            public int compare(ArrayList<Node> path1, ArrayList<Node> path2) {
-                if (path1.get(path1.size() - 1).getDist() < path2.get(path2.size() - 1).getDist()) {
-                    return -1;
-                } else if (path1.get(path1.size() - 1).getDist() == path2.get(path2.size() - 1).getDist()) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            }
-        };
-
         PriorityQueue<Node> queue = new PriorityQueue<>();
 
-        PriorityQueue<ArrayList<Node>> q = new PriorityQueue<>(S.size(), g);
-
         src.setDist(0);
-        queue.addAll(nodes);
+        queue.add(src);
+
+        curPath.add(src.getX());
+        curPath.add(src.getY());
 
         while (!queue.isEmpty()) {
 
             Node u = queue.poll();
-            paths.add(u);
+//            q.add(paths);
 
             List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
+
+            if (!p.contains(u) && adjacentU.isEmpty()) {
+                curPath.remove(u.getX());
+                curPath.remove(u.getY());
+            }
 
             for (Edge e : adjacentU) {
                 Node v = e.getDest();
@@ -462,24 +455,29 @@ private HashMap<Coordinate, Node> hm;
                         v.setDist(u.getDist() + e.getWeight());
                         visited[v.index] = true;
                         queue.add(v);
+                        curPath.add(v.getX());
+                        curPath.add(v.getY());
                     }
-                }
-                if (S.contains(v)) {
-                    paths.add(dest);
-                    q.add(paths);
+                    if (p.contains(v)) {
+                        if (v.getDist() < minCost) {
+                            minCost = v.getDist();
+                            paths.put(minCost, curPath);
+                        } else {
+                            paths.put(v.getDist(), curPath);
+                        }
+                        curPath.clear();
+                        curPath.add(src.getX());
+                        curPath.add(src.getY());
+                        break;
+                    }
                 }
             }
         }
-
-        paths = q.poll();
-       return NODE2INT(paths);
-
-
-        /**
-         * Christian's attempt
-         */
-
-       // HashSet<Node> set = putNodeInSet(S);
+        ArrayList<Integer> minPath = paths.get(minCost);
+        if (!minPath.isEmpty()) {
+            return minPath;
+        }
+        return null;
     }
 
     /**
