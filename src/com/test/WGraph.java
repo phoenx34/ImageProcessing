@@ -57,6 +57,12 @@ private HashMap<Coordinate, Node> hm;
             neighbors.add(e);
         }
 
+        //Adding method to add an adjacent node
+        public void addAdj(Node node, int wt)
+        {
+            neighbors.add(new Edge())
+        }
+
         public List<Edge> getNeighbors() {
             return neighbors;
         }
@@ -500,8 +506,16 @@ private HashMap<Coordinate, Node> hm;
      * @return
      */
     public ArrayList<Integer> S2S(ArrayList<Integer> S1, ArrayList<Integer> S2) {
-//        LinkedList<Node> listS1 = this.putNodeInSet(S1);
-//        LinkedList<Node> listS2 = this.putNodeInSet(S2);
+        LinkedList<Node> listS1 = this.putNodeInList(S1);
+        LinkedList<Node> listS2 = this.putNodeInList(S2);
+
+        Node s1Node = new Node(-1, -1);
+        Node s2Node = new Node(-2, -2);
+
+        for(Node n : listS2)
+        {
+            n.addNeighbor();
+        }
 
 
 
@@ -533,6 +547,20 @@ private HashMap<Coordinate, Node> hm;
     }
 
 
-//    private LinkedList<Node> putNodeInList(Array)
+   private LinkedList<Node> putNodeInList(ArrayList<Integer> S)
+   {
+       Iterator<Integer> it = S.iterator();
+
+       LinkedList<Node> nodeList = new LinkedList<Node>();
+
+       while (it.hasNext())
+       {
+           Integer xCor = it.next();
+           Integer yCor = it.next();
+           nodeList.add(hm.get(new Coordinate(xCor, yCor)));
+       }
+
+       return nodeList;
+   }
 
 }
