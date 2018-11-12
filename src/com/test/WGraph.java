@@ -134,7 +134,53 @@ public class WGraph {
 
     public class Coordinate
     {
-        
+        private int xCor;
+        private int yCor;
+
+        public Coordinate(int x, int y)
+        {
+            this.xCor = x;
+            this.yCor = y;
+
+        }
+
+        @Override
+        public boolean equals(Object ob)
+        {
+            if(ob.getClass() != this.getClass())
+            {
+                return false;
+            }
+            else
+            {
+                return ((((Coordinate) ob).xCor == this.xCor) && (((Coordinate) ob).yCor == this.yCor));
+
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return (xCor << 16) + yCor;
+        }
+
+        public int getxCor()
+        {
+            return this.xCor;
+        }
+
+        public int getyCor()
+        {
+            return this.yCor;
+        }
+
+        public void setxCor(int xCor)
+        {
+            this.xCor = xCor;
+        }
+        public void setyCor(int yCor)
+        {
+            this.yCor = yCor;
+        }
     }
 
     private List<Node> nodes = new LinkedList<Node>() {
