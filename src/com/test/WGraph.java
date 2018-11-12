@@ -60,7 +60,8 @@ private HashMap<Coordinate, Node> hm;
         //Adding method to add an adjacent node
         public void addAdj(Node node, int wt)
         {
-            neighbors.add(new Edge())
+            //neighbors.add(new Edge())
+            neighbors.add(new Edge(node, wt));
         }
 
         public List<Edge> getNeighbors() {
@@ -127,6 +128,12 @@ private HashMap<Coordinate, Node> hm;
 
         public Edge(Node src, Node dest, int weight) {
             this.src = src;
+            this.dest = dest;
+            this.weight = weight;
+        }
+
+        public Edge(Node dest, int weight)
+        {
             this.dest = dest;
             this.weight = weight;
         }
@@ -524,8 +531,17 @@ private HashMap<Coordinate, Node> hm;
 
         for(Node n : listS2)
         {
-            n.addNeighbor();
+            //n.addNeighbor();
+            n.addAdj(n, 0);
         }
+
+        for(Node n : listS2)
+        {
+            n.addAdj(s2Node, 0);
+        }
+
+
+
 
 
 
