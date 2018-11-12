@@ -18,6 +18,9 @@ public class Main {
         S.add(3);
         S.add(4);
 
+//        S.add(7);
+//        S.add(8);
+
         S.add(9);
         S.add(10);
 
