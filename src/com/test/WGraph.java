@@ -409,9 +409,11 @@ public class WGraph {
                         queue.add(v);
                     }
                 }
-                if (S.contains(v)) {
-                    paths.add(dest);
+                if (S.contains(v.getX()) && S.contains(v.getY())) {
+                    paths.clear();
+                    paths.add(v);
                     q.add(paths);
+                    break;
                 }
             }
         }
