@@ -542,26 +542,30 @@ private HashMap<Coordinate, Node> hm;
         q.setDist(0);
         queue.add(q);
 
-        curPath.add(q.getX());
-        curPath.add(q.getY());
-
         while (!queue.isEmpty()) {
             Node u = queue.poll();
             List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
 
             for (Edge e : adjacentU) {
+                Node fuck = e.getSrc();
+                if (!visited[fuck.index]) {
+                    curPath.add(fuck.getX());
+                    curPath.add(fuck.getY());
+                }
+//                curPath.add(fuck.getX());
+//                curPath.add(fuck.getY());
                 Node v = e.getDest();
                 if (!visited[v.index]) {
                     if ((u.getDist() + e.getWeight()) < v.getDist()) {
                         v.setDist(u.getDist() + e.getWeight());
                         visited[v.index] = true;
                         queue.add(v);
-                        if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
-                            continue;
-                        } else {
-                            curPath.add(v.getX());
-                            curPath.add(v.getY());
-                        }
+//                        if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
+//                            continue;
+//                        } else {
+                        curPath.add(v.getX());
+                        curPath.add(v.getY());
+
                     }
                     if (s_2.contains(v)) {
                         ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
@@ -571,9 +575,10 @@ private HashMap<Coordinate, Node> hm;
                         } else {
                             paths.put(v.getDist(), temp);
                         }
+                        visited[v.index] = false;
                         curPath.clear();
-                        curPath.add(u.getX());
-                        curPath.add(u.getY());
+//                        curPath.add(u.getX());
+//                        curPath.add(u.getY());
                     }
                 }
             }
