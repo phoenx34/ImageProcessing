@@ -30,6 +30,7 @@ private HashMap<Coordinate, Node> hm;
         private Node[] nodes;
         int x, y, index, dist;
         List<Edge> neighbors = new LinkedList<>();
+        private boolean inQueue;
 
         public Node(int x, int y) {
             this.x = x;
@@ -84,6 +85,11 @@ private HashMap<Coordinate, Node> hm;
 
         public void setY(int y) {
             this.y = y;
+        }
+
+        public boolean isInQueue()
+        {
+            return this.inQueue;
         }
 
         @Override
@@ -543,7 +549,7 @@ private HashMap<Coordinate, Node> hm;
         }
 
         PriorityQueue pq = new PriorityQueue();
-        
+
 
 
 
@@ -593,5 +599,7 @@ private HashMap<Coordinate, Node> hm;
 
        return nodeList;
    }
+
+   
 
 }
