@@ -1,8 +1,17 @@
 package com.test;
 
-import java.io.*;
-import java.net.URL;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * This class takes a file name as input, and scans that file for data.
@@ -12,7 +21,7 @@ import java.util.*;
  *
  * @author Marc Isaac (misaac34@iastate.edu)
  */
-public class WGraph {
+class WGraph {
 
     /**
      * This class consists of an x and y coordinate,
@@ -22,62 +31,53 @@ public class WGraph {
      * also need to fix the public declarations
      * Usually do both of these at the end of the project
      */
-    public class Node implements Comparable<Node>{
+    private class Node implements Comparable<Node>{
         int x, y, index, dist;
         List<Edge> neighbors = new LinkedList<>();
 
-        public Node(int x, int y) {
+        Node(int x, int y) {
             this.x = x;
             this.y = y;
             dist = Integer.MAX_VALUE;
         }
 
-        public int getDist() {
+        int getDist() {
             return dist;
         }
 
-        public void setDist(int dist) {
+        void setDist(int dist) {
             this.dist = dist;
         }
 
-        public int getIndex() {
+        int getIndex() {
             return index;
         }
 
-        public void setIndex(int index) {
+        void setIndex(int index) {
             this.index = index;
         }
 
-        public void addNeighbor(Edge e) {
+        void addNeighbor(Edge e) {
             neighbors.add(e);
         }
 
-        public List<Edge> getNeighbors() {
+        List<Edge> getNeighbors() {
             return neighbors;
         }
 
-        public int getX() {
+        int getX() {
             return x;
         }
 
-        public int getY() {
+        int getY() {
             return y;
-        }
-
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public void setY(int y) {
-            this.y = y;
         }
 
         @Override
         public int hashCode(){
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(this.getX());
-            buffer.append(this.getY());
-            return buffer.toString().hashCode();
+            String buffer = String.valueOf(this.getX()) +
+                    this.getY();
+            return buffer.hashCode();
         }
 
         @Override
@@ -86,20 +86,12 @@ public class WGraph {
             if (object == this) return true;
             if (this.getClass() != object.getClass()) return false;
             Node v = (Node)object;
-            if(this.hashCode()== v.hashCode())
-                return true;
-            return false;
+            return this.hashCode() == v.hashCode();
         }
 
         @Override
         public int compareTo(Node v) {
-            if (this.getDist() < v.getDist()) {
-                return -1;
-            } else if (this.getDist() == v.getDist()) {
-                return 0;
-            } else {
-                return 1;
-            }
+            return Integer.compare(this.getDist(), v.getDist());
         }
     }
 
@@ -114,41 +106,32 @@ public class WGraph {
         Node src, dest;
         int weight;
 
-        public Edge(Node src, Node dest, int weight) {
+        Edge(Node src, Node dest, int weight) {
             this.src = src;
             this.dest = dest;
             this.weight = weight;
         }
 
-        public Node getSrc() {
+        Node getSrc() {
             return src;
         }
 
-        public void setSrc(Node src) {
-            this.src = src;
-        }
-
-        public Node getDest() {
+        Node getDest() {
             return dest;
         }
 
-        public int getWeight() {
+        int getWeight() {
             return weight;
         }
-
-        public void setWeight(int weight) {
-            this.weight = weight;
-        }
-
     }
 
 
-    private List<Node> nodes = new LinkedList<Node>() {
+    private LinkedList<Node> nodes = new LinkedList<Node>() {
         @Override
         public boolean contains(Object o) {
             if(!nodes.isEmpty()) {
                 for (Node v : nodes) {
-                    if (v.equals((Node) o)) {
+                    if (v.equals(o)) {
                         ((Node) o).setIndex(v.getIndex());
                         return true;
                     }
@@ -156,9 +139,10 @@ public class WGraph {
             } return false;
         }
     };
-    private List<Edge> edges = new LinkedList<>();
-    private Map<Node,List<Edge>> adj = new HashMap<>();
-    private int V, E;
+
+    private List<Edge> edges;
+    private HashMap<Node, List<Edge>> adj;
+    private int V;
 
     /**
      * This is the default constructor for WGraph.
@@ -166,28 +150,27 @@ public class WGraph {
      * populating a graph, G with the data from the file as
      * a list of nodes and the edges that connect them.
      *
-     * @param FName
+     * @param FName The file name
      */
-    public WGraph(String FName) {
+    WGraph(String FName) {
         if (FName == null)
             throw new NullPointerException("File is empty or non-existent");
 
+        edges = new LinkedList<>();
+        adj = new HashMap<>();
         populateGraph(FName);
         adjPop();
-
-
-
     }
 
     /**
      * Currently everything is working upon basic testing besides the adjacency map.
      * However, each node will have a set of neighbors which is correct based on the edges
      * given in the file. All that is left to do is translate that set of neighbors into an adjacency list (map)
-     * @param FName
+     * @param FName The file name
      */
     private void populateGraph(String FName) {
-        int ux, uy, vx, vy, wt;
-        int i=0, j=0, r=0;
+        int ux, uy, vx, vy;
+        int j=0;
         File inputFile = new File (FName);
 
         try {
@@ -197,8 +180,7 @@ public class WGraph {
             String line = br.readLine();
             V = Integer.parseInt(line);
 
-            line = br.readLine();
-            E = Integer.parseInt(line);
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
 //                line = br.readLine();
@@ -227,7 +209,7 @@ public class WGraph {
                 vy = Integer.parseInt(temp);
                 line = line.substring(line.indexOf(" ") + 1);
 
-                wt = Integer.parseInt(line);
+                int wt = Integer.parseInt(line);
 
 
                 // needs a check to see if either node already exists
@@ -264,8 +246,6 @@ public class WGraph {
                 // Need to check if adj contains u_node or not.
                 // If so, we need to replace instead of put
 
-                i += 2;
-
             }
         } catch (IOException e) {
             System.out.println("Reading file data failed.");
@@ -273,7 +253,7 @@ public class WGraph {
         }
     }
 
-    public void adjPop() {
+    private void adjPop() {
         for (Node v : nodes) {
             if (adj.isEmpty() || !adj.containsKey(v)) {
                 adj.put(v, v.getNeighbors());
@@ -287,11 +267,11 @@ public class WGraph {
      *
      * Efficiency: O(log(V)(V+E))
      *
-     * @param ux
-     * @param uy
-     * @param vx
-     * @param vy
-     * @return
+     * @param ux x value for node u
+     * @param uy y value for node u
+     * @param vx x value for node v
+     * @param vy y value for node v
+     * @return The shortest path from u to v
      */
 
     public ArrayList<Integer> V2V(int ux, int uy, int vx, int vy) {
@@ -302,10 +282,8 @@ public class WGraph {
 
         boolean[] visited = new boolean[V];
 
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-
         src.setDist(0);
-        queue.addAll(nodes);
+        PriorityQueue<Node> queue = new PriorityQueue<>(nodes);
 
         while (!queue.isEmpty()) {
 
@@ -343,12 +321,12 @@ public class WGraph {
      *
      * Efficiency: O(Log(V)(V+E))
      *
-     * @param ux
-     * @param uy
-     * @param S
-     * @return
+     * @param ux x value for node u
+     * @param uy y value for node u
+     * @param S Set of nodes to calculate distance from u to
+     * @return The shortest distance path from node u to some node in S
      */
-    public ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
+    ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
 
         Node src = new Node(ux, uy);
 
@@ -356,7 +334,7 @@ public class WGraph {
 
         int minCost = Integer.MAX_VALUE;
         ArrayList<Integer> curPath = new ArrayList<>();
-        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<Integer, ArrayList<Integer>>();
+        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<>();
 
         for (int i = 0; i < S.size(); i+=2) {
             Node d = new Node(S.get(i), S.get(i+1));
@@ -392,6 +370,7 @@ public class WGraph {
                         }
                     }
                     if (p.contains(v)) {
+                        Object o = curPath.clone();
                         ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
                         if (v.getDist() < minCost) {
                             minCost = v.getDist();
@@ -428,11 +407,11 @@ public class WGraph {
      *
      * Efficiency: O(Elog(V))
      *
-     * @param S1
-     * @param S2
-     * @return
+     * @param S1 Set of nodes to calculate minDistance from
+     * @param S2 Set of nodes to calculate minDistance to
+     * @return Shortest possible path from some node in S1 to some node in S2
      */
-    public ArrayList<Integer> S2S(ArrayList<Integer> S1, ArrayList<Integer> S2) {
+    ArrayList<Integer> S2S(ArrayList<Integer> S1, ArrayList<Integer> S2) {
         Set<Node> s_1 = new HashSet<>();
         Set<Node> s_2 = new HashSet<>();
         boolean[] visited = new boolean[V];
@@ -460,7 +439,7 @@ public class WGraph {
 
         int minCost = Integer.MAX_VALUE;
         ArrayList<Integer> curPath = new ArrayList<>();
-        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<Integer, ArrayList<Integer>>();
+        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<>();
 
         PriorityQueue<Node> queue = new PriorityQueue<>();
         q.setDist(0);
