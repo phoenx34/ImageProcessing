@@ -26,6 +26,8 @@ private HashMap<Coordinate, Node> hm;
      * Usually do both of these at the end of the project
      */
     public class Node implements Comparable<Node>{
+
+        private Node[] nodes;
         int x, y, index, dist;
         List<Edge> neighbors = new LinkedList<>();
 
@@ -539,6 +541,9 @@ private HashMap<Coordinate, Node> hm;
         {
             n.addAdj(s2Node, 0);
         }
+
+        PriorityQueue pq = new PriorityQueue();
+        
 
 
 
