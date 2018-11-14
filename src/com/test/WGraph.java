@@ -25,7 +25,7 @@ private HashMap<Coordinate, Node> hm;
      * also need to fix the public declarations
      * Usually do both of these at the end of the project
      */
-    public class Node implements Comparable<Node>{
+    public static class Node implements Comparable<Node>{
 
         private Node[] nodes;
         int x, y, index, dist;
@@ -37,6 +37,12 @@ private HashMap<Coordinate, Node> hm;
             this.y = y;
             dist = Integer.MAX_VALUE;
         }
+        //Default constructor
+        public Node()
+        {
+
+        }
+
 
 
 
@@ -61,11 +67,11 @@ private HashMap<Coordinate, Node> hm;
         }
 
         //Adding method to add an adjacent node
-        public void addAdj(Node node, int wt)
-        {
-            //neighbors.add(new Edge())
-            neighbors.add(new Edge(node, wt));
-        }
+//        public void addAdj(Node node, int wt)
+//        {
+//            //neighbors.add(new Edge())
+//            neighbors.add(new Edge(node, wt));
+//        }
 
         public List<Edge> getNeighbors() {
             return neighbors;
