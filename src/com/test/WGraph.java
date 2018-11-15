@@ -4,14 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class takes a file name as input, and scans that file for data.
@@ -91,7 +84,12 @@ class WGraph {
 
         @Override
         public int compareTo(Node v) {
-            return Integer.compare(this.getDist(), v.getDist());
+            if (this.getDist() < v.getDist()) {
+                return -1;
+            } else if (this.getDist() == v.getDist()) {
+                return 0;
+            }
+            return 1;
         }
     }
 
@@ -288,6 +286,9 @@ class WGraph {
         while (!queue.isEmpty()) {
 
             Node u = queue.poll();
+            if (u.getDist() > 99999999) {
+                u.setDist(0);
+            }
             paths.add(u.getX());
             paths.add(u.getY());
 
@@ -333,8 +334,8 @@ class WGraph {
         Set<Node> p = new HashSet<>();
 
         int minCost = Integer.MAX_VALUE;
-        ArrayList<Integer> curPath = new ArrayList<>();
-        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<>();
+        ArrayList<Node> curPath = new ArrayList<>();
+        Hashtable<Integer, ArrayList<Node>> paths = new Hashtable<>();
 
         for (int i = 0; i < S.size(); i+=2) {
             Node d = new Node(S.get(i), S.get(i+1));
@@ -348,12 +349,14 @@ class WGraph {
         src.setDist(0);
         queue.add(src);
 
-        curPath.add(src.getX());
-        curPath.add(src.getY());
+        curPath.add(src);
 
         while (!queue.isEmpty()) {
             Node u = queue.poll();
             List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
+            if (!curPath.contains(u)) {
+                curPath.add(u);
+            }
 
             for (Edge e : adjacentU) {
                 Node v = e.getDest();
@@ -362,34 +365,40 @@ class WGraph {
                         v.setDist(u.getDist() + e.getWeight());
                         visited[v.index] = true;
                         queue.add(v);
-                        if (!p.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
-                            continue;
-                        } else {
-                            curPath.add(v.getX());
-                            curPath.add(v.getY());
-                        }
                     }
                     if (p.contains(v)) {
+                        curPath.add(v);
                         Object o = curPath.clone();
-                        ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
+                        ArrayList<Node> temp = (ArrayList<Node>) curPath.clone();
                         if (v.getDist() < minCost) {
                             minCost = v.getDist();
                             paths.put(minCost, temp);
                         } else {
                             paths.put(v.getDist(), temp);
                         }
+                        visited[v.index] = false;
                         curPath.clear();
-                        curPath.add(src.getX());
-                        curPath.add(src.getY());
+                        curPath.add(u);
                     }
                 }
             }
+
         }
-        ArrayList<Integer> minPath = paths.get(minCost);
+        ArrayList<Node> minPath = paths.get(minCost);
+
         if (!minPath.isEmpty()) {
-            return minPath;
+            return N2INT(minPath);
         }
         return null;
+    }
+
+    public ArrayList<Integer> N2INT(ArrayList<Node> q) {
+        ArrayList<Integer> r = new ArrayList<>();
+        for (int i = 0; i < q.size(); i += 1) {
+            r.add(q.get(i).getX());
+            r.add(q.get(i).getY());
+        }
+        return r;
     }
 
     /**
@@ -415,81 +424,159 @@ class WGraph {
         Set<Node> s_1 = new HashSet<>();
         Set<Node> s_2 = new HashSet<>();
         boolean[] visited = new boolean[V];
-        for (int i = 0; i < S1.size(); i += 2) {
-            Node n = new Node(S1.get(i), S1.get(i+1));
-            s_1.add(n);
-        }
-        for (int j = 0; j < S2.size(); j += 2) {
-            Node m = new Node(S2.get(j), S2.get(j+1));
-            s_2.add(m);
-        }
-
-        Node q = new Node(0, 0);
-        Node s = new Node(0, 0);
-
-        for (Node n : s_1) {
-            Edge e = new Edge(q, n, 0);
-            q.addNeighbor(e);
-        }
-
-        for (Node r : s_2) {
-            Edge e = new Edge(s, r, 0);
-            s.addNeighbor(e);
-        }
+        Node src = new Node(0, 0);
+        Node dest = new Node(0, 0);
 
         int minCost = Integer.MAX_VALUE;
         ArrayList<Integer> curPath = new ArrayList<>();
         Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<>();
 
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-        q.setDist(0);
-        queue.add(q);
+
+        for (int i = 0; i < S1.size(); i += 2) {
+            Node n = new Node(S1.get(i), S1.get(i + 1));
+            s_1.add(n);
+            Edge e = new Edge(src, n, 0);
+            src.addNeighbor(e);
+        }
+        for (int j = 0; j < S2.size(); j += 2) {
+            Node m = new Node(S2.get(j), S2.get(j + 1));
+            s_2.add(m);
+            Edge e = new Edge(dest, m, 0);
+            dest.addNeighbor(e);
+            if (s_1.contains(m)) {
+                curPath.add(m.getX());
+                curPath.add(m.getY());
+                return curPath;
+            }
+        }
+
+        src.setDist(0);
+        PriorityQueue<Node> queue = new PriorityQueue<Node>(nodes);
+        queue.peek().setDist(0);
 
         while (!queue.isEmpty()) {
+
             Node u = queue.poll();
+            if (!curPath.contains(u.getX()) && !curPath.contains(u.getY())) {
+                curPath.add(u.getX());
+                curPath.add(u.getY());
+            }
+            if (s_1.contains(u)) {
+                u.setDist(0);
+            }
+
+//            curPath.add(u.getX());
+//            curPath.add(u.getY());
+
             List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
 
             for (Edge e : adjacentU) {
-                Node fuck = e.getSrc();
-                if (!visited[fuck.index]) {
-                    curPath.add(fuck.getX());
-                    curPath.add(fuck.getY());
-                }
-//                curPath.add(fuck.getX());
-//                curPath.add(fuck.getY());
                 Node v = e.getDest();
+                if (visited[v.index]) {
+                    v.setDist(0);
+                    visited[v.index] = false;
+                }
                 if (!visited[v.index]) {
+//                    if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
+//                        break;
+//                    }
                     if ((u.getDist() + e.getWeight()) < v.getDist()) {
+                        queue.remove(v);
                         v.setDist(u.getDist() + e.getWeight());
-                        visited[v.index] = true;
                         queue.add(v);
-//                        if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
-//                            continue;
-//                        } else {
-                        curPath.add(v.getX());
-                        curPath.add(v.getY());
-
+                        visited[v.index] = true;
                     }
-                    if (s_2.contains(v)) {
-                        ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
-                        if (v.getDist() < minCost) {
-                            minCost = v.getDist();
-                            paths.put(minCost, temp);
-                        } else {
-                            paths.put(v.getDist(), temp);
-                        }
-                        visited[v.index] = false;
+                }
+                if (s_1.contains(v)) {
+                    v.setDist(0);
+                    curPath.clear();
+                    curPath.add(v.getX());
+                    curPath.add(v.getY());
+                    break;
+                }
+                if (s_2.contains(v)) {
+                    curPath.add(v.getX());
+                    curPath.add(v.getY());
+                    Object c = curPath.clone();
+                    ArrayList<Integer> tmp;
+                    if (v.getDist() < minCost) {
+                        tmp = (ArrayList<Integer>) curPath.clone();
+                        minCost = v.getDist();
+                        paths.put(minCost, tmp);
                         curPath.clear();
-//                        curPath.add(u.getX());
-//                        curPath.add(u.getY());
+                        curPath.add(u.getX());
+                        curPath.add(u.getY());
                     }
                 }
             }
+
+//            if (s_2.contains(queue.peek())) {
+//                curPath.add(queue.peek().getX());
+//                curPath.add(queue.peek().getY());
+//                Object o = curPath.clone();
+//                ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
+//                if (queue.peek().getDist() < minCost) {
+//                    minCost = queue.peek().getDist();
+//                    paths.put(minCost, temp);
+//                } else {
+//                    paths.put(queue.peek().getDist(), temp);
+//                }
+
         }
+
+
+
         ArrayList<Integer> minPath = paths.get(minCost);
         if (!minPath.isEmpty()) {
             return minPath;
         }
         return null;
     }
+//        PriorityQueue<Node> queue = new PriorityQueue<>();
+//        q.setDist(0);
+//        queue.add(q);
+
+//        while (!queue.isEmpty()) {
+//            Node u = queue.poll();
+//            List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
+//
+//            for (Edge e : adjacentU) {
+//                Node fuck = e.getSrc();
+//                if (!(curPath.contains(fuck.getX()) && curPath.contains(fuck.getY()))) {
+//                    curPath.add(fuck.getX());
+//                    curPath.add(fuck.getY());
+//                }
+////                curPath.add(fuck.getX());
+////                curPath.add(fuck.getY());
+//                Node v = e.getDest();
+//                if (!visited[v.index]) {
+//                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
+//                        v.setDist(u.getDist() + e.getWeight());
+//                        visited[v.index] = true;
+//                        queue.add(v);
+//                        if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
+//                            continue;
+//                        }
+////                        else {
+////                            curPath.add(v.getX());
+////                            curPath.add(v.getY());
+////                        }
+//                    }
+//                    if (s_2.contains(v)) {
+//                        ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
+//                        if (v.getDist() < minCost) {
+//                            minCost = v.getDist();
+//                            paths.put(minCost, temp);
+//                        } else {
+//                            paths.put(v.getDist(), temp);
+//                        }
+//                        visited[v.index] = false;
+//                        curPath.clear();
+//                        curPath.add(u.getX());
+//                        curPath.add(u.getY());
+//                    }
+//                }
+//            }
+//        }
+//
 }
