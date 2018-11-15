@@ -402,8 +402,6 @@ class WGraph {
     }
 
     /**
-     * Travis and I discussed in class that we should do this one by keeping two sets,
-     *
      * Create two new vertices, one for each set. Say u exists in S1 and v exists in S2
      * Set the vertices to have a path to every edge in each set respectively,
      * with an edge weight of 0 for all of the new edges (adjacent to u or v)
@@ -506,71 +504,10 @@ class WGraph {
             }
           }
 
-//            if (s_2.contains(queue.peek())) {
-//                curPath.add(queue.peek().getX());
-//                curPath.add(queue.peek().getY());
-//                Object o = curPath.clone();
-//                ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
-//                if (queue.peek().getDist() < minCost) {
-//                    minCost = queue.peek().getDist();
-//                    paths.put(minCost, temp);
-//                } else {
-//                    paths.put(queue.peek().getDist(), temp);
-//                }
-
-
-
         ArrayList<Node> minPath = paths.get(minCost);
         if (!minPath.isEmpty()) {
             return N2INT(minPath);
         }
         return null;
     }
-//        PriorityQueue<Node> queue = new PriorityQueue<>();
-//        q.setDist(0);
-//        queue.add(q);
-
-//        while (!queue.isEmpty()) {
-//            Node u = queue.poll();
-//            List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
-//
-//            for (Edge e : adjacentU) {
-//                Node fuck = e.getSrc();
-//                if (!(curPath.contains(fuck.getX()) && curPath.contains(fuck.getY()))) {
-//                    curPath.add(fuck.getX());
-//                    curPath.add(fuck.getY());
-//                }
-////                curPath.add(fuck.getX());
-////                curPath.add(fuck.getY());
-//                Node v = e.getDest();
-//                if (!visited[v.index]) {
-//                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
-//                        v.setDist(u.getDist() + e.getWeight());
-//                        visited[v.index] = true;
-//                        queue.add(v);
-//                        if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
-//                            continue;
-//                        }
-////                        else {
-////                            curPath.add(v.getX());
-////                            curPath.add(v.getY());
-////                        }
-//                    }
-//                    if (s_2.contains(v)) {
-//                        ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
-//                        if (v.getDist() < minCost) {
-//                            minCost = v.getDist();
-//                            paths.put(minCost, temp);
-//                        } else {
-//                            paths.put(v.getDist(), temp);
-//                        }
-//                        visited[v.index] = false;
-//                        curPath.clear();
-//                        curPath.add(u.getX());
-//                        curPath.add(u.getY());
-//                    }
-//                }
-//            }
-//        }
-//
 }
