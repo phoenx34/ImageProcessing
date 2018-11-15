@@ -428,8 +428,8 @@ class WGraph {
         Node dest = new Node(0, 0);
 
         int minCost = Integer.MAX_VALUE;
-        ArrayList<Integer> curPath = new ArrayList<>();
-        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<>();
+        ArrayList<Node> curPath = new ArrayList<>();
+        Hashtable<Integer, ArrayList<Node>> paths = new Hashtable<>();
 
 
         for (int i = 0; i < S1.size(); i += 2) {
@@ -444,9 +444,8 @@ class WGraph {
             Edge e = new Edge(dest, m, 0);
             dest.addNeighbor(e);
             if (s_1.contains(m)) {
-                curPath.add(m.getX());
-                curPath.add(m.getY());
-                return curPath;
+                curPath.add(m);
+                return N2INT(curPath);
             }
         }
 
@@ -457,12 +456,8 @@ class WGraph {
         while (!queue.isEmpty()) {
 
             Node u = queue.poll();
-            if (!curPath.contains(u.getX()) && !curPath.contains(u.getY())) {
-                curPath.add(u.getX());
-                curPath.add(u.getY());
-            }
-            if (s_1.contains(u)) {
-                u.setDist(0);
+            if (!curPath.contains(u)) {
+                curPath.add(u);
             }
 
 //            curPath.add(u.getX());
@@ -472,9 +467,23 @@ class WGraph {
 
             for (Edge e : adjacentU) {
                 Node v = e.getDest();
-                if (visited[v.index]) {
-                    v.setDist(0);
+//                if (visited[v.index]) {
+//                    v.setDist(0);
+//                    visited[v.index] = false;
+//                }
+                if (s_2.contains(v)) {
+                    curPath.add(v);
+                    Object o = curPath.clone();
+                    ArrayList<Node> temp = (ArrayList<Node>) curPath.clone();
+                    if (v.getDist() < minCost) {
+                        minCost = v.getDist();
+                        paths.put(minCost, temp);
+                    } else {
+                        paths.put(v.getDist(), temp);
+                    }
                     visited[v.index] = false;
+                    curPath.clear();
+                    curPath.add(u);
                 }
                 if (!visited[v.index]) {
 //                    if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
@@ -490,25 +499,12 @@ class WGraph {
                 if (s_1.contains(v)) {
                     v.setDist(0);
                     curPath.clear();
-                    curPath.add(v.getX());
-                    curPath.add(v.getY());
+                    curPath.add(v);
                     break;
                 }
-                if (s_2.contains(v)) {
-                    curPath.add(v.getX());
-                    curPath.add(v.getY());
-                    Object c = curPath.clone();
-                    ArrayList<Integer> tmp;
-                    if (v.getDist() < minCost) {
-                        tmp = (ArrayList<Integer>) curPath.clone();
-                        minCost = v.getDist();
-                        paths.put(minCost, tmp);
-                        curPath.clear();
-                        curPath.add(u.getX());
-                        curPath.add(u.getY());
-                    }
-                }
+
             }
+          }
 
 //            if (s_2.contains(queue.peek())) {
 //                curPath.add(queue.peek().getX());
@@ -522,13 +518,11 @@ class WGraph {
 //                    paths.put(queue.peek().getDist(), temp);
 //                }
 
-        }
 
 
-
-        ArrayList<Integer> minPath = paths.get(minCost);
+        ArrayList<Node> minPath = paths.get(minCost);
         if (!minPath.isEmpty()) {
-            return minPath;
+            return N2INT(minPath);
         }
         return null;
     }
