@@ -392,7 +392,7 @@ public class ImageProcessor {
                         paths.put(v.getDist(), temp);
                     }
                     v.setVisited(false);
-                    curPath.clear();
+                    curPath.remove(v);
                     queue.clear();
                     queue.addAll(S1);
                 }

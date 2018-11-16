@@ -13,7 +13,7 @@ public class Main {
         System.out.println(q);
 
         for (ImageProcessor.Pixel p : q) {
-            System.out.print("(" + p.getX() + ", " + p.getY() + ") -> ");
+            System.out.print("(" + p.getX() + ", " + p.getY() + ") cost: " + p.getDist() + " -> ");
         }
         /*WGraph graph = new WGraph("graphinput.txt");
         ArrayList<Integer> S1 = new ArrayList<>();
