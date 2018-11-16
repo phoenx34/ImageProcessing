@@ -65,5 +65,29 @@ public class ImageProcessor {
     }
 
 
+    public ArrayList<ArrayList<Integer>> getImportance()
+    {
+        while(!nodes.isEmpty())
+        {
+            //change pixel importance
+        }
+
+
+        ArrayList<ArrayList<Integer>> importanceMatrix = new ArrayList<ArrayList<Integer>>(height);
+        for(int i = 0; i < height; i++)
+        {
+            ArrayList<Integer> widthOfMatrix = new ArrayList<Integer>(width);
+            importanceMatrix.add(widthOfMatrix);
+            for(int j = 0; j < width; j++)
+            {
+                importanceMatrix.get(i).add(this.pix[i].get(j).ge)
+            }
+
+        }
+
+        return importanceMatrix;
+    }
+
+
 
 }

@@ -3,7 +3,7 @@ package com.test;
 public class Pixel extends WGraph.Node {
 
     //Should this variable be final int
-    private int r, g, b;
+    private  int r, g, b;
     private int imp;
 
 
@@ -40,7 +40,7 @@ public class Pixel extends WGraph.Node {
             return imp;
         }
 
-        public int setImportance(int num)
+        public void setImportance(int num)
         {
             this.imp = num;
         }
