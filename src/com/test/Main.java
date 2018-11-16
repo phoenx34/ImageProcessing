@@ -1,5 +1,6 @@
 package com.test;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -7,7 +8,10 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-        WGraph graph = new WGraph("graphinput.txt");
+        ImageProcessor fuckMe = new ImageProcessor("graphinput.txt");
+        ArrayList<ImageProcessor.Pixel> q = fuckMe.MinVC();
+        System.out.println(q);
+        /*WGraph graph = new WGraph("graphinput.txt");
         ArrayList<Integer> S1 = new ArrayList<>();
         ArrayList<Integer> S2 = new ArrayList<>();
         S1.add(1);
@@ -31,5 +35,6 @@ public class Main {
           //  System.out.println("(" + i.get(j) + ", " + i.get(j+1) + ")");
         //}
         System.out.println(i + " is the shortest path from u to v");
+        */
     }
 }
