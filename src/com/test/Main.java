@@ -26,7 +26,7 @@ public class Main {
         S2.add(3);
         S2.add(4);
 
-        ArrayList<Integer> i = graph.V2S(1,2, S2);
+        ArrayList<Integer> i = graph.V2V(1,2, 5,6);
         //for (int j = 0; j < i.size() -2; j += 2) {
           //  System.out.println("(" + i.get(j) + ", " + i.get(j+1) + ")");
         //}
