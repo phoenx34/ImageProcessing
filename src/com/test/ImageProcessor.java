@@ -1,7 +1,9 @@
 package com.test;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -9,85 +11,127 @@ import java.util.Stack;
 
 public class ImageProcessor {
 
-    Stack<Pixel> nodes;
-    ArrayList<Pixel>[] pix;
-    final int height;
-    int width;
+    private class Pixel {
+        int x, y, r, g, b;
+        Pixel(int r, int g, int b) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+        }
+
+        public int getR() {
+            return r;
+        }
+
+        public int getB() {
+            return b;
+        }
+
+        public int getG() {
+            return g;
+        }
+
+    }
+
+    ArrayList<ArrayList<Pixel>> m;
+    private static int H, W;
 
 
     public ImageProcessor(String FName)
     {
-        this.height = fileParse(FName);
+        if (FName == null)
+            throw new NullPointerException("File is empty or non-existent");
+
+        m = new ArrayList<>();
+        fileParse(FName);
     }
 
-    private int fileParse(String FName)
+    private void fileParse(String FName)
     {
-        //Is this the correct delimeter to use?????????
-        String delimiters = "[ ]+";
+//        //Is this the correct delimeter to use?????????
+//        String delimiters = "[ ]+";
+
+        File inputFile = new File (FName);
 
         try {
-            //PROBABLY WILL USE TRY CATCH HERE
-            BufferedReader br = new BufferedReader(new FileReader(FName));
+            FileReader fileReader = new FileReader (inputFile);
+            BufferedReader br = new BufferedReader(fileReader);
+
             String line = br.readLine();
-            int h = Integer.parseInt(line);
+            H = Integer.parseInt(line);
 
             line = br.readLine();
-            width = Integer.parseInt(line);
+            W = Integer.parseInt(line);
 
-            pix = new ArrayList[h];
 
-            for(int i = 0; i < h; i++)
+
+            for(int i = 0; i < H; i++)
             {
                 line = br.readLine();
-                String[] values = line.split(delimiters);
-                for(int j = 0; j < values.length; j+=3)
-                {
-                    Integer r = Integer.parseInt(values[j]);
-                    Integer g = Integer.parseInt(values[j+1]);
-                    Integer b = Integer.parseInt(values[j+2]);
-                    Pixel pixieDust = new Pixel(r, g, b, j, i);
-                    pix[i].add(pixieDust);
-                    nodes.push(pixieDust);
+                ArrayList<Pixel> px_line = new ArrayList<>();
 
+                while (!line.isEmpty()) {
+                    String temp = line.substring(0, line.indexOf(" "));
+                    int r = Integer.parseInt(temp);
+                    line = line.substring(line.indexOf(" ") + 1);
+
+                    temp = line.substring(0, line.indexOf(" "));
+                    int g = Integer.parseInt(temp);
+                    line = line.substring(line.indexOf(" ") + 1);
+
+                    temp = line.substring(0, line.indexOf(" "));
+                    int b = Integer.parseInt(temp);
+
+                    Pixel p = new Pixel(r, g, b);
+                    px_line.add(p);
+
+                    if (line.contains(" ")) {
+                        line = line.substring(line.indexOf(" ") + 1);
+                    } else {
+                        break;
+                    }
                 }
+
+                m.add(px_line);
             }
 
             br.close();
 
-            return h;
+        } catch(IOException e) {
+            System.out.println("Reading data from file failed.");
         }
+    }
 
-        catch(Exception eio)
-        {
-            eio.printStackTrace();
-        }
+    int getPDist(Pixel p, Pixel q) {
         return -1;
     }
 
+    int getYImportance(Pixel p) {
+        return -1;
+    }
 
-    public ArrayList<ArrayList<Integer>> getImportance()
-    {
-        while(!nodes.isEmpty())
-        {
-            //change pixel importance
-        }
+    int getXImportance(Pixel p) {
+        return -1;
+    }
 
+    int getPixelImportance(Pixel p) {
+        return -1;
+    }
 
-        ArrayList<ArrayList<Integer>> importanceMatrix = new ArrayList<ArrayList<Integer>>(height);
-        for(int i = 0; i < height; i++)
-        {
-            ArrayList<Integer> widthOfMatrix = new ArrayList<Integer>(width);
-            importanceMatrix.add(widthOfMatrix);
-            for(int j = 0; j < width; j++)
-            {
-                importanceMatrix.get(i).add(this.pix[i].get(j).ge)
-            }
+    /**
+     * Should calculate importance for every pixel in arraylist,
+     * and return a 2d array of said importance
+     * @return
+     */
+    ArrayList<ArrayList<Integer>> getImportance() {
+        return null;
+    }
 
-        }
-
-        return importanceMatrix;
+    void writeReduced(int k, String fname) {
+        return;
     }
 
 
 
 }
+

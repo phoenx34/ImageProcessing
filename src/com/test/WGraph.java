@@ -1,7 +1,9 @@
 package com.test;
 
-import java.io.*;
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -13,7 +15,7 @@ import java.util.*;
  *
  * @author Marc Isaac (misaac34@iastate.edu)
  */
-public class WGraph {
+class WGraph {
 
 private HashMap<Coordinate, Node> hm;
 
@@ -25,14 +27,12 @@ private HashMap<Coordinate, Node> hm;
      * also need to fix the public declarations
      * Usually do both of these at the end of the project
      */
-    public static class Node implements Comparable<Node>{
-
-        private Node[] nodes;
+    private class Node implements Comparable<Node>{
         int x, y, index, dist;
         List<Edge> neighbors = new LinkedList<>();
         private boolean inQueue;
 
-        public Node(int x, int y) {
+        Node(int x, int y) {
             this.x = x;
             this.y = y;
             dist = Integer.MAX_VALUE;
@@ -41,69 +41,43 @@ private HashMap<Coordinate, Node> hm;
         public Node()
         {
 
-        }
-
-
-
-
-        public int getDist() {
+        int getDist() {
             return dist;
         }
 
-        public void setDist(int dist) {
+        void setDist(int dist) {
             this.dist = dist;
         }
 
-        public int getIndex() {
+        int getIndex() {
             return index;
         }
 
-        public void setIndex(int index) {
+        void setIndex(int index) {
             this.index = index;
         }
 
-        public void addNeighbor(Edge e) {
+        void addNeighbor(Edge e) {
             neighbors.add(e);
         }
 
-        //Adding method to add an adjacent node
-//        public void addAdj(Node node, int wt)
-//        {
-//            //neighbors.add(new Edge())
-//            neighbors.add(new Edge(node, wt));
-//        }
-
-        public List<Edge> getNeighbors() {
+        List<Edge> getNeighbors() {
             return neighbors;
         }
 
-        public int getX() {
+        int getX() {
             return x;
         }
 
-        public int getY() {
+        int getY() {
             return y;
-        }
-
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public void setY(int y) {
-            this.y = y;
-        }
-
-        public boolean isInQueue()
-        {
-            return this.inQueue;
         }
 
         @Override
         public int hashCode(){
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(this.getX());
-            buffer.append(this.getY());
-            return buffer.toString().hashCode();
+            String buffer = String.valueOf(this.getX()) +
+                    this.getY();
+            return buffer.hashCode();
         }
 
         @Override
@@ -112,9 +86,7 @@ private HashMap<Coordinate, Node> hm;
             if (object == this) return true;
             if (this.getClass() != object.getClass()) return false;
             Node v = (Node)object;
-            if(this.hashCode()== v.hashCode())
-                return true;
-            return false;
+            return this.hashCode() == v.hashCode();
         }
 
         @Override
@@ -123,9 +95,8 @@ private HashMap<Coordinate, Node> hm;
                 return -1;
             } else if (this.getDist() == v.getDist()) {
                 return 0;
-            } else {
-                return 1;
             }
+            return 1;
         }
     }
 
@@ -140,38 +111,23 @@ private HashMap<Coordinate, Node> hm;
         Node src, dest;
         int weight;
 
-        public Edge(Node src, Node dest, int weight) {
+        Edge(Node src, Node dest, int weight) {
             this.src = src;
             this.dest = dest;
             this.weight = weight;
         }
 
-        public Edge(Node dest, int weight)
-        {
-            this.dest = dest;
-            this.weight = weight;
-        }
-
-        public Node getSrc() {
+        Node getSrc() {
             return src;
         }
 
-        public void setSrc(Node src) {
-            this.src = src;
-        }
-
-        public Node getDest() {
+        Node getDest() {
             return dest;
         }
 
-        public int getWeight() {
+        int getWeight() {
             return weight;
         }
-
-        public void setWeight(int weight) {
-            this.weight = weight;
-        }
-
     }
 
     public class Coordinate
@@ -179,58 +135,12 @@ private HashMap<Coordinate, Node> hm;
         private int xCor;
         private int yCor;
 
-        public Coordinate(int x, int y)
-        {
-            this.xCor = x;
-            this.yCor = y;
-
-        }
-
-        @Override
-        public boolean equals(Object ob)
-        {
-            if(ob.getClass() != this.getClass())
-            {
-                return false;
-            }
-            else
-            {
-                return ((((Coordinate) ob).xCor == this.xCor) && (((Coordinate) ob).yCor == this.yCor));
-
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            return (xCor << 16) + yCor;
-        }
-
-        public int getxCor()
-        {
-            return this.xCor;
-        }
-
-        public int getyCor()
-        {
-            return this.yCor;
-        }
-
-        public void setxCor(int xCor)
-        {
-            this.xCor = xCor;
-        }
-        public void setyCor(int yCor)
-        {
-            this.yCor = yCor;
-        }
-    }
-
-    private List<Node> nodes = new LinkedList<Node>() {
+    private LinkedList<Node> nodes = new LinkedList<Node>() {
         @Override
         public boolean contains(Object o) {
             if(!nodes.isEmpty()) {
                 for (Node v : nodes) {
-                    if (v.equals((Node) o)) {
+                    if (v.equals(o)) {
                         ((Node) o).setIndex(v.getIndex());
                         return true;
                     }
@@ -238,9 +148,10 @@ private HashMap<Coordinate, Node> hm;
             } return false;
         }
     };
-    private List<Edge> edges = new LinkedList<>();
-    private Map<Node,List<Edge>> adj = new HashMap<>();
-    private int V, E;
+
+    private List<Edge> edges;
+    private HashMap<Node, List<Edge>> adj;
+    private int V;
 
     /**
      * This is the default constructor for WGraph.
@@ -248,28 +159,27 @@ private HashMap<Coordinate, Node> hm;
      * populating a graph, G with the data from the file as
      * a list of nodes and the edges that connect them.
      *
-     * @param FName
+     * @param FName The file name
      */
-    public WGraph(String FName) {
+    WGraph(String FName) {
         if (FName == null)
             throw new NullPointerException("File is empty or non-existent");
 
+        edges = new LinkedList<>();
+        adj = new HashMap<>();
         populateGraph(FName);
         adjPop();
-
-
-
     }
 
     /**
      * Currently everything is working upon basic testing besides the adjacency map.
      * However, each node will have a set of neighbors which is correct based on the edges
      * given in the file. All that is left to do is translate that set of neighbors into an adjacency list (map)
-     * @param FName
+     * @param FName The file name
      */
     private void populateGraph(String FName) {
-        int ux, uy, vx, vy, wt;
-        int i=0, j=0, r=0;
+        int ux, uy, vx, vy;
+        int j=0;
         File inputFile = new File (FName);
 
         try {
@@ -279,8 +189,7 @@ private HashMap<Coordinate, Node> hm;
             String line = br.readLine();
             V = Integer.parseInt(line);
 
-            line = br.readLine();
-            E = Integer.parseInt(line);
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
 //                line = br.readLine();
@@ -309,7 +218,7 @@ private HashMap<Coordinate, Node> hm;
                 vy = Integer.parseInt(temp);
                 line = line.substring(line.indexOf(" ") + 1);
 
-                wt = Integer.parseInt(line);
+                int wt = Integer.parseInt(line);
 
 
                 // needs a check to see if either node already exists
@@ -346,8 +255,6 @@ private HashMap<Coordinate, Node> hm;
                 // Need to check if adj contains u_node or not.
                 // If so, we need to replace instead of put
 
-                i += 2;
-
             }
         } catch (IOException e) {
             System.out.println("Reading file data failed.");
@@ -355,7 +262,7 @@ private HashMap<Coordinate, Node> hm;
         }
     }
 
-    public void adjPop() {
+    private void adjPop() {
         for (Node v : nodes) {
             if (adj.isEmpty() || !adj.containsKey(v)) {
                 adj.put(v, v.getNeighbors());
@@ -369,11 +276,11 @@ private HashMap<Coordinate, Node> hm;
      *
      * Efficiency: O(log(V)(V+E))
      *
-     * @param ux
-     * @param uy
-     * @param vx
-     * @param vy
-     * @return
+     * @param ux x value for node u
+     * @param uy y value for node u
+     * @param vx x value for node v
+     * @param vy y value for node v
+     * @return The shortest path from u to v
      */
 
     public ArrayList<Integer> V2V(int ux, int uy, int vx, int vy) {
@@ -384,14 +291,15 @@ private HashMap<Coordinate, Node> hm;
 
         boolean[] visited = new boolean[V];
 
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-
         src.setDist(0);
-        queue.addAll(nodes);
+        PriorityQueue<Node> queue = new PriorityQueue<>(nodes);
 
         while (!queue.isEmpty()) {
 
             Node u = queue.poll();
+            if (u.getDist() > 99999999) {
+                u.setDist(0);
+            }
             paths.add(u.getX());
             paths.add(u.getY());
 
@@ -425,20 +333,20 @@ private HashMap<Coordinate, Node> hm;
      *
      * Efficiency: O(Log(V)(V+E))
      *
-     * @param ux
-     * @param uy
-     * @param S
-     * @return
+     * @param ux x value for node u
+     * @param uy y value for node u
+     * @param S Set of nodes to calculate distance from u to
+     * @return The shortest distance path from node u to some node in S
      */
-    public ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
+    ArrayList<Integer> V2S(int ux, int uy, ArrayList<Integer> S) {
 
         Node src = new Node(ux, uy);
 
         Set<Node> p = new HashSet<>();
 
         int minCost = Integer.MAX_VALUE;
-        ArrayList<Integer> curPath = new ArrayList<>();
-        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<Integer, ArrayList<Integer>>();
+        ArrayList<Node> curPath = new ArrayList<>();
+        Hashtable<Integer, ArrayList<Node>> paths = new Hashtable<>();
 
         for (int i = 0; i < S.size(); i+=2) {
             Node d = new Node(S.get(i), S.get(i+1));
@@ -452,12 +360,14 @@ private HashMap<Coordinate, Node> hm;
         src.setDist(0);
         queue.add(src);
 
-        curPath.add(src.getX());
-        curPath.add(src.getY());
+        curPath.add(src);
 
         while (!queue.isEmpty()) {
             Node u = queue.poll();
             List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
+            if (!curPath.contains(u)) {
+                curPath.add(u);
+            }
 
             for (Edge e : adjacentU) {
                 Node v = e.getDest();
@@ -466,38 +376,43 @@ private HashMap<Coordinate, Node> hm;
                         v.setDist(u.getDist() + e.getWeight());
                         visited[v.index] = true;
                         queue.add(v);
-                        if (!p.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
-                            continue;
-                        } else {
-                            curPath.add(v.getX());
-                            curPath.add(v.getY());
-                        }
                     }
                     if (p.contains(v)) {
-                        ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
+                        curPath.add(v);
+                        Object o = curPath.clone();
+                        ArrayList<Node> temp = (ArrayList<Node>) curPath.clone();
                         if (v.getDist() < minCost) {
                             minCost = v.getDist();
                             paths.put(minCost, temp);
                         } else {
                             paths.put(v.getDist(), temp);
                         }
+                        visited[v.index] = false;
                         curPath.clear();
-                        curPath.add(src.getX());
-                        curPath.add(src.getY());
+                        curPath.add(u);
                     }
                 }
             }
+
         }
-        ArrayList<Integer> minPath = paths.get(minCost);
+        ArrayList<Node> minPath = paths.get(minCost);
+
         if (!minPath.isEmpty()) {
-            return minPath;
+            return N2INT(minPath);
         }
         return null;
     }
 
+    public ArrayList<Integer> N2INT(ArrayList<Node> q) {
+        ArrayList<Integer> r = new ArrayList<>();
+        for (int i = 0; i < q.size(); i += 1) {
+            r.add(q.get(i).getX());
+            r.add(q.get(i).getY());
+        }
+        return r;
+    }
+
     /**
-     * Travis and I discussed in class that we should do this one by keeping two sets,
-     *
      * Create two new vertices, one for each set. Say u exists in S1 and v exists in S2
      * Set the vertices to have a path to every edge in each set respectively,
      * with an edge weight of 0 for all of the new edges (adjacent to u or v)
@@ -510,88 +425,99 @@ private HashMap<Coordinate, Node> hm;
      *
      * Efficiency: O(Elog(V))
      *
-     * @param S1
-     * @param S2
-     * @return
+     * @param S1 Set of nodes to calculate minDistance from
+     * @param S2 Set of nodes to calculate minDistance to
+     * @return Shortest possible path from some node in S1 to some node in S2
      */
-    public ArrayList<Integer> S2S(ArrayList<Integer> S1, ArrayList<Integer> S2) {
+    ArrayList<Integer> S2S(ArrayList<Integer> S1, ArrayList<Integer> S2) {
         Set<Node> s_1 = new HashSet<>();
         Set<Node> s_2 = new HashSet<>();
         boolean[] visited = new boolean[V];
-        for (int i = 0; i < S1.size(); i += 2) {
-            Node n = new Node(S1.get(i), S1.get(i+1));
-            s_1.add(n);
-        }
-        for (int j = 0; j < S2.size(); j += 2) {
-            Node m = new Node(S2.get(j), S2.get(j+1));
-            s_2.add(m);
-        }
-
-        Node q = new Node(0, 0);
-        Node s = new Node(0, 0);
-
-        for (Node n : s_1) {
-            Edge e = new Edge(q, n, 0);
-            q.addNeighbor(e);
-        }
-
-        for (Node r : s_2) {
-            Edge e = new Edge(s, r, 0);
-            s.addNeighbor(e);
-        }
+        Node src = new Node(0, 0);
+        Node dest = new Node(0, 0);
 
         int minCost = Integer.MAX_VALUE;
-        ArrayList<Integer> curPath = new ArrayList<>();
-        Hashtable<Integer, ArrayList<Integer>> paths = new Hashtable<Integer, ArrayList<Integer>>();
+        ArrayList<Node> curPath = new ArrayList<>();
+        Hashtable<Integer, ArrayList<Node>> paths = new Hashtable<>();
 
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-        q.setDist(0);
-        queue.add(q);
+
+        for (int i = 0; i < S1.size(); i += 2) {
+            Node n = new Node(S1.get(i), S1.get(i + 1));
+            s_1.add(n);
+            Edge e = new Edge(src, n, 0);
+            src.addNeighbor(e);
+        }
+        for (int j = 0; j < S2.size(); j += 2) {
+            Node m = new Node(S2.get(j), S2.get(j + 1));
+            s_2.add(m);
+            Edge e = new Edge(dest, m, 0);
+            dest.addNeighbor(e);
+            if (s_1.contains(m)) {
+                curPath.add(m);
+                return N2INT(curPath);
+            }
+        }
+
+        src.setDist(0);
+        PriorityQueue<Node> queue = new PriorityQueue<Node>(nodes);
+        queue.peek().setDist(0);
 
         while (!queue.isEmpty()) {
+
             Node u = queue.poll();
+            if (!curPath.contains(u)) {
+                curPath.add(u);
+            }
+
+//            curPath.add(u.getX());
+//            curPath.add(u.getY());
+
             List<Edge> adjacentU = adj.get(nodes.get(u.getIndex()));
 
             for (Edge e : adjacentU) {
-                Node fuck = e.getSrc();
-                if (!visited[fuck.index]) {
-                    curPath.add(fuck.getX());
-                    curPath.add(fuck.getY());
-                }
-//                curPath.add(fuck.getX());
-//                curPath.add(fuck.getY());
                 Node v = e.getDest();
-                if (!visited[v.index]) {
-                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
-                        v.setDist(u.getDist() + e.getWeight());
-                        visited[v.index] = true;
-                        queue.add(v);
-//                        if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
-//                            continue;
-//                        } else {
-                        curPath.add(v.getX());
-                        curPath.add(v.getY());
-
+//                if (visited[v.index]) {
+//                    v.setDist(0);
+//                    visited[v.index] = false;
+//                }
+                if (s_2.contains(v)) {
+                    curPath.add(v);
+                    Object o = curPath.clone();
+                    ArrayList<Node> temp = (ArrayList<Node>) curPath.clone();
+                    if (v.getDist() < minCost) {
+                        minCost = v.getDist();
+                        paths.put(minCost, temp);
+                    } else {
+                        paths.put(v.getDist(), temp);
                     }
-                    if (s_2.contains(v)) {
-                        ArrayList<Integer> temp = (ArrayList<Integer>) curPath.clone();
-                        if (v.getDist() < minCost) {
-                            minCost = v.getDist();
-                            paths.put(minCost, temp);
-                        } else {
-                            paths.put(v.getDist(), temp);
-                        }
-                        visited[v.index] = false;
-                        curPath.clear();
-//                        curPath.add(u.getX());
-//                        curPath.add(u.getY());
+                    visited[v.index] = false;
+                    curPath.clear();
+                    curPath.add(u);
+                }
+                if (!visited[v.index]) {
+//                    if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
+//                        break;
+//                    }
+                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
+                        queue.remove(v);
+                        v.setDist(u.getDist() + e.getWeight());
+                        queue.add(v);
+                        visited[v.index] = true;
                     }
                 }
+                if (s_1.contains(v)) {
+                    v.setDist(0);
+                    curPath.clear();
+                    curPath.add(v);
+                    break;
+                }
+
             }
-        }
-        ArrayList<Integer> minPath = paths.get(minCost);
+          }
+
+        ArrayList<Node> minPath = paths.get(minCost);
         if (!minPath.isEmpty()) {
-            return minPath;
+            return N2INT(minPath);
         }
         return null;
     }
