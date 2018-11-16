@@ -75,9 +75,9 @@ public class ImageProcessor {
 
         @Override
         public int compareTo(Pixel q) {
-            if (getPixelImportance(this) < getPixelImportance(q)) {
+            if (this.getDist() < q.getDist()) {
                 return -1;
-            } else if (getPixelImportance(this) == getPixelImportance(q)) {
+            } else if (this.getDist() == q.getDist()) {
                 return 0;
             } else {
                 return 1;
@@ -299,9 +299,12 @@ public class ImageProcessor {
         Set<Pixel> S1 = new HashSet<>();
         Set<Pixel> S2 = new HashSet<>();
 
+        ArrayList<ArrayList<Integer>> I = getImportance();
+
         Pixel src = new Pixel(0,0,0,0,0);
 
         for (int i = 0; i < W; i++) {
+            m.get(0).get(i).setDist(I.get(0).get(i));
             S1.add(m.get(0).get(i));
             S2.add(m.get(H - 1).get(i));
         }
@@ -316,14 +319,24 @@ public class ImageProcessor {
         Hashtable<Integer, ArrayList<Pixel>> paths = new Hashtable<>();
         src.setDist(0);
         PriorityQueue<Pixel> queue = new PriorityQueue<Pixel>();
-        for (int i = 0; i < H - 1; i++) {
-            queue.addAll(m.get(i));
-        }
-        queue.peek().setDist(0);
+//        for (int i = 0; i < H - 1; i++) {
+//            queue.addAll(m.get(i));
+//
+//        }
+        queue.addAll(m.get(0));
+        queue.peek().setDist(getPixelImportance(queue.peek()));
 
         while (!queue.isEmpty()) {
-
             Pixel u = queue.poll();
+            queue.clear();
+
+            if (u.getX() == 0) {
+                u.setDist(getPixelImportance(u));
+                curPath.clear();
+                u.setVisited(true);
+                S1.remove(u);
+            }
+
             if (!curPath.contains(u)) {
                 curPath.add(u);
             }
@@ -343,6 +356,30 @@ public class ImageProcessor {
 //                    v.setDist(0);
 //                    visited[v.index] = false;
 //                }
+//                if (S2.contains(v)) {
+//                    curPath.add(v);
+//                    Object o = curPath.clone();
+//                    ArrayList<Pixel> temp = (ArrayList<Pixel>) curPath.clone();
+//                    if (v.getDist() < minCost) {
+//                        minCost = v.getDist();
+//                        paths.put(minCost, temp);
+//                    } else {
+//                        paths.put(v.getDist(), temp);
+//                    }
+//                    v.setVisited(false);
+//                    curPath.remove(v);
+//                }
+                if (!v.getVisited()) {
+//                    if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
+//                        break;
+//                    }
+                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
+                        v.setDist(u.getDist() + e.getWeight());
+                        queue.add(v);
+                        v.setVisited(true);
+                    }
+                }
+
                 if (S2.contains(v)) {
                     curPath.add(v);
                     Object o = curPath.clone();
@@ -355,25 +392,17 @@ public class ImageProcessor {
                     }
                     v.setVisited(false);
                     curPath.clear();
-                    curPath.add(u);
+                    queue.clear();
+                    queue.addAll(S1);
                 }
-                if (!v.getVisited()) {
-//                    if (!s_2.contains(v) && adj.get(nodes.get(v.getIndex())).isEmpty()) {
-//                        break;
-//                    }
-                    if ((u.getDist() + e.getWeight()) < v.getDist()) {
-                        queue.remove(v);
-                        v.setDist(u.getDist() + e.getWeight());
-                        queue.add(v);
-                        v.setVisited(true);
-                    }
-                }
-                if (S1.contains(v)) {
-                    v.setDist(0);
-                    curPath.clear();
-                    curPath.add(v);
-                    break;
-                }
+
+
+//                if (S1.contains(v)) {
+//                    v.setDist(0);
+//                    curPath.clear();
+//                    curPath.add(v);
+//                    break;
+//                }
 
             }
         }
