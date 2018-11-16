@@ -295,6 +295,7 @@ public class ImageProcessor {
         return I;
     }
 
+
     ArrayList<Pixel> MinVC() {
         Set<Pixel> S1 = new HashSet<>();
         Set<Pixel> S2 = new HashSet<>();
