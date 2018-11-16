@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="22c364ba-9f9d-4952-9231-64def1ef925e" name="Default Changelist" comment="" />
+    <list default="true" id="22c364ba-9f9d-4952-9231-64def1ef925e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/com/test/ImageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/test/ImageProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/test/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/test/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/test/Pixel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/test/WGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/test/WGraph.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -9,16 +14,51 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1124807449">
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="1" />
+          <entry key="txt" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="1" />
+          <entry key="PLAIN_TEXT" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="java" value="116" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="116" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/test/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="28" selection-start-line="28" selection-end-line="28" />
+            <state relative-caret-position="433">
+              <caret line="29" column="47" selection-start-line="29" selection-start-column="47" selection-end-line="29" selection-end-column="47" />
               <folding>
-                <element signature="e#259#268#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/graphinput.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="168">
+              <caret line="6" column="9" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -26,8 +66,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/test/WGraph.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-317">
-              <caret line="406" column="74" selection-start-line="406" selection-start-column="74" selection-end-line="406" selection-end-column="74" />
+            <state relative-caret-position="452">
+              <caret line="512" column="1" selection-start-line="512" selection-start-column="1" selection-end-line="512" selection-end-column="1" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1019#1020#0" expanded="true" />
@@ -60,32 +100,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/test/ImageProcessor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="423">
-              <caret line="119" selection-start-line="119" selection-end-line="119" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#495#496#0" expanded="true" />
-                <element signature="e#527#528#0" expanded="true" />
-                <element signature="e#556#557#0" expanded="true" />
-                <element signature="e#588#589#0" expanded="true" />
-                <element signature="e#617#618#0" expanded="true" />
-                <element signature="e#649#650#0" expanded="true" />
-                <element signature="e#2646#2647#0" expanded="true" />
-                <element signature="e#2671#2672#0" expanded="true" />
-                <element signature="e#2706#2707#0" expanded="true" />
-                <element signature="e#2731#2732#0" expanded="true" />
-                <element signature="e#2766#2767#0" expanded="true" />
-                <element signature="e#2791#2792#0" expanded="true" />
-                <element signature="e#2830#2831#0" expanded="true" />
-                <element signature="e#2855#2856#0" expanded="true" />
-                <element signature="e#3052#3053#0" expanded="true" />
-                <element signature="e#3079#3080#0" expanded="true" />
-                <element signature="e#3125#3126#0" expanded="true" />
-                <element signature="e#3147#3148#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="198">
+              <caret line="116" column="35" lean-forward="true" selection-start-line="116" selection-start-column="35" selection-end-line="116" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -117,10 +136,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/com/test/PriorityQueueModified.java" />
-        <option value="$PROJECT_DIR$/src/com/test/Main.java" />
-        <option value="$PROJECT_DIR$/src/com/test/WGraph.java" />
-        <option value="$PROJECT_DIR$/src/com/test/ImageProcessor.java" />
         <option value="$PROJECT_DIR$/src/com/test/Pixel.java" />
+        <option value="$PROJECT_DIR$/src/com/test/ImageProcessor.java" />
+        <option value="$PROJECT_DIR$/src/com/test/WGraph.java" />
+        <option value="$PROJECT_DIR$/src/com/test/Main.java" />
       </list>
     </option>
   </component>
@@ -178,7 +197,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542331150955" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542334800492" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
   </component>
   <component name="RunDashboard">
@@ -231,12 +250,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="427000" />
+    <option name="totallyTimeSpent" value="2597000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="823" height="900" extended-state="6" />
+    <frame x="0" y="0" width="1134" height="900" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3290653" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23534799" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -245,7 +265,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32891566" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32891566" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.10843374" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -266,7 +286,7 @@
       <window_info anchor="right" id="Maven Projects" order="8" />
     </layout>
     <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3290653" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3290653" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -276,7 +296,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32891566" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.10843374" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.10843374" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -284,7 +304,7 @@
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.32771084" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.32891566" />
+      <window_info active="true" anchor="bottom" id="Messages" order="11" visible="true" weight="0.32891566" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -303,10 +323,31 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/com/test/Pixel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/test/ImageProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="116" column="35" lean-forward="true" selection-start-line="116" selection-start-column="35" selection-end-line="116" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/graphinput.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="6" column="9" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/test/WGraph.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-317">
-          <caret line="406" column="74" selection-start-line="406" selection-start-column="74" selection-end-line="406" selection-end-column="74" />
+        <state relative-caret-position="452">
+          <caret line="512" column="1" selection-start-line="512" selection-start-column="1" selection-end-line="512" selection-end-column="1" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1019#1020#0" expanded="true" />
@@ -338,30 +379,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/test/ImageProcessor.java">
+    <entry file="file://$PROJECT_DIR$/src/com/test/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="119" selection-start-line="119" selection-end-line="119" />
+        <state relative-caret-position="433">
+          <caret line="29" column="47" selection-start-line="29" selection-start-column="47" selection-end-line="29" selection-end-column="47" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#495#496#0" expanded="true" />
-            <element signature="e#527#528#0" expanded="true" />
-            <element signature="e#556#557#0" expanded="true" />
-            <element signature="e#588#589#0" expanded="true" />
-            <element signature="e#617#618#0" expanded="true" />
-            <element signature="e#649#650#0" expanded="true" />
-            <element signature="e#2646#2647#0" expanded="true" />
-            <element signature="e#2671#2672#0" expanded="true" />
-            <element signature="e#2706#2707#0" expanded="true" />
-            <element signature="e#2731#2732#0" expanded="true" />
-            <element signature="e#2766#2767#0" expanded="true" />
-            <element signature="e#2791#2792#0" expanded="true" />
-            <element signature="e#2830#2831#0" expanded="true" />
-            <element signature="e#2855#2856#0" expanded="true" />
-            <element signature="e#3052#3053#0" expanded="true" />
-            <element signature="e#3079#3080#0" expanded="true" />
-            <element signature="e#3125#3126#0" expanded="true" />
-            <element signature="e#3147#3148#0" expanded="true" />
           </folding>
         </state>
       </provider>

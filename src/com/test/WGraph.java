@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-
 /**
  * This class takes a file name as input, and scans that file for data.
  * It represents the data in the file as a graph.
@@ -16,8 +15,6 @@ import java.util.*;
  * @author Marc Isaac (misaac34@iastate.edu)
  */
 class WGraph {
-
-private HashMap<Coordinate, Node> hm;
 
     /**
      * This class consists of an x and y coordinate,
@@ -30,16 +27,12 @@ private HashMap<Coordinate, Node> hm;
     private class Node implements Comparable<Node>{
         int x, y, index, dist;
         List<Edge> neighbors = new LinkedList<>();
-        private boolean inQueue;
 
         Node(int x, int y) {
             this.x = x;
             this.y = y;
             dist = Integer.MAX_VALUE;
         }
-        //Default constructor
-        public Node()
-        {
 
         int getDist() {
             return dist;
@@ -130,10 +123,6 @@ private HashMap<Coordinate, Node> hm;
         }
     }
 
-    public class Coordinate
-    {
-        private int xCor;
-        private int yCor;
 
     private LinkedList<Node> nodes = new LinkedList<Node>() {
         @Override
@@ -513,7 +502,7 @@ private HashMap<Coordinate, Node> hm;
                 }
 
             }
-          }
+        }
 
         ArrayList<Node> minPath = paths.get(minCost);
         if (!minPath.isEmpty()) {
@@ -521,47 +510,4 @@ private HashMap<Coordinate, Node> hm;
         }
         return null;
     }
-
-
-
-
-
-
-
-    //This is probably unnecessary at this point
-
-    private HashSet<Node> putNodeInSet(ArrayList<Integer> S)
-    {
-        Iterator<Integer> it = S.iterator();
-        HashSet<Node> hset = new HashSet<Node>();
-
-        while(it.hasNext())
-        {
-            Integer x = it.next();
-            Integer y = it.next();
-            hset.add(hm.get(new Coordinate(x, y)));
-        }
-
-        return hset;
-    }
-
-
-   private LinkedList<Node> putNodeInList(ArrayList<Integer> S)
-   {
-       Iterator<Integer> it = S.iterator();
-
-       LinkedList<Node> nodeList = new LinkedList<Node>();
-
-       while (it.hasNext())
-       {
-           Integer xCor = it.next();
-           Integer yCor = it.next();
-           nodeList.add(hm.get(new Coordinate(xCor, yCor)));
-       }
-
-       return nodeList;
-   }
-
-   
-
 }
