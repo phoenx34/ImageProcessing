@@ -53,6 +53,14 @@ public class ImageProcessor {
             return x;
         }
 
+        public void setY(int y) {
+            this.y = y;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
         public int getY() {
             return y;
         }
@@ -412,8 +420,27 @@ public class ImageProcessor {
 
     }
 
-    void writeReduced(int k, String fname) {
+    void removeAndUpdate() {
+        // Needs testing. Should remove the values in path from M<<>>
+        // then update the x and y coords of all nodes after the one removed correctly
+        ArrayList<Pixel> path = MinVC();
+        for (Pixel p : path) {
+            m.get(p.getX()).remove(p.getY());
+            if (p.getY() == W - 1) {
+                continue;
+            }
+            for (int i = p.getY(); i < W - 1; i++) {
+                m.get(p.getX()).get(i).setY(m.get(p.getX()).get(i).getY() - 1);
+            }
+        }
+    }
 
+    void writeReduced(int k, String fname) {
+        for (int i = 0; i < k; i++) {
+            removeAndUpdate();
+        }
+
+        // After the for loop, print contents of m<<>> to file fname.
 
         return;
     }
