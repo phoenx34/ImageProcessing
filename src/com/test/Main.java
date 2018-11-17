@@ -9,12 +9,8 @@ public class Main {
     public static void main(String[] args) {
 	// write your code here
         ImageProcessor fuckMe = new ImageProcessor("graphinput.txt");
-        ArrayList<ImageProcessor.Pixel> q = fuckMe.MinVC();
-        System.out.println(q);
-
-        for (ImageProcessor.Pixel p : q) {
-            System.out.print("(" + p.getX() + ", " + p.getY() + ") cost: " + p.getDist() + " -> ");
-        }
+        String fuck = "Fname.txt";
+        fuckMe.writeReduced(2, fuck);
         /*WGraph graph = new WGraph("graphinput.txt");
         ArrayList<Integer> S1 = new ArrayList<>();
         ArrayList<Integer> S2 = new ArrayList<>();

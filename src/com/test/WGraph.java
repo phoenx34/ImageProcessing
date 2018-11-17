@@ -67,22 +67,6 @@ class WGraph {
         }
 
         @Override
-        public int hashCode(){
-            String buffer = String.valueOf(this.getX()) +
-                    this.getY();
-            return buffer.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object object){
-            if (object == null) return false;
-            if (object == this) return true;
-            if (this.getClass() != object.getClass()) return false;
-            Node v = (Node)object;
-            return this.hashCode() == v.hashCode();
-        }
-
-        @Override
         public int compareTo(Node v) {
             if (this.getDist() < v.getDist()) {
                 return -1;

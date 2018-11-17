@@ -1,8 +1,5 @@
 package com.test;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -119,6 +116,7 @@ public class ImageProcessor {
     ArrayList<ArrayList<Pixel>> m;
     HashMap<Pixel, Set<Edge>> adj = new HashMap<>();
     private static int H, W;
+    ArrayList<ArrayList<Integer>> I;
 
 
     public ImageProcessor(String FName)
@@ -304,11 +302,11 @@ public class ImageProcessor {
     }
 
 
+
+
     ArrayList<Pixel> MinVC() {
         Set<Pixel> S1 = new HashSet<>();
         Set<Pixel> S2 = new HashSet<>();
-
-        ArrayList<ArrayList<Integer>> I = getImportance();
 
         Pixel src = new Pixel(0,0,0,0,0);
 
@@ -423,9 +421,11 @@ public class ImageProcessor {
     void removeAndUpdate() {
         // Needs testing. Should remove the values in path from M<<>>
         // then update the x and y coords of all nodes after the one removed correctly
+
         ArrayList<Pixel> path = MinVC();
         for (Pixel p : path) {
             m.get(p.getX()).remove(p.getY());
+            I.get(p.getX()).remove(p.getY());
             if (p.getY() == W - 1) {
                 continue;
             }
@@ -433,19 +433,49 @@ public class ImageProcessor {
                 m.get(p.getX()).get(i).setY(m.get(p.getX()).get(i).getY() - 1);
             }
         }
+        adj.clear();
+        W = W - 1;
+        populateGraph(I);
+
     }
 
     void writeReduced(int k, String fname) {
+        I = getImportance();
         for (int i = 0; i < k; i++) {
             removeAndUpdate();
         }
 
         // After the for loop, print contents of m<<>> to file fname.
+        //Esteban mentions to store into a string which I will try to do
+        //Store into a string, then get the first two lines of the file?????
+        //Then write to file
 
-        return;
+        File f = new File(fname);
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new FileOutputStream("Fname.txt"), true);
+            pw.println(H);
+            pw.println(W);
+
+            for(int row = 0; row < H; row++)
+            {
+                for(int col = 0; col < W; col++)
+
+                {
+                    //Do I need getR, getG, and getB?
+                    pw.write(m.get(row).get(col).getR() + " " + m.get(row).get(col).getG() + " " + m.get(row).get(col).getB() + " ");
+                }
+                pw.println();
+            }
+
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }finally {
+            if(pw!=null)
+            {
+                pw.close();
+            }
+        }
     }
-
-
-
 }
 
