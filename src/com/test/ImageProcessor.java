@@ -446,19 +446,32 @@ public class ImageProcessor {
         //Esteban mentions to store into a string which I will try to do
         //Store into a string, then get the first two lines of the file?????
         //Then write to file
+
+        File f = new File(fname);
+        PrintWriter pw = null;
         try {
-            PrintWriter pw = new PrintWriter(new FileOutputStream("Fname.txt"), true);
+            pw = new PrintWriter(new FileOutputStream("Fname.txt"), true);
+            pw.println(H);
+            pw.println(W);
 
             for(int col = 0; col < m.size(); col++)
             {
                 for(int row = 0; row < m.get(col).size(); row++)
+
                 {
+                    //Do I need getR, getG, and getB?
                     pw.write(m.get(row).get(col).getR() + " " + m.get(row).get(col).getG() + " " + m.get(row).get(col).getB());
                 }
+                pw.println();
             }
 
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
+        }finally {
+            if(pw!=null)
+            {
+                pw.close();
+            }
         }
 
         return;
