@@ -13,6 +13,7 @@ import java.util.*;
  * and sets of vertices.
  *
  * @author Marc Isaac (misaac34@iastate.edu)
+ * @author Christian Hernandez(cah1@iastate.edu)
  */
 class WGraph {
 
