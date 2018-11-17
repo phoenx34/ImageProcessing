@@ -1,10 +1,12 @@
 package com.test;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.*;
 
 public class ImageProcessor {
 
@@ -441,9 +443,28 @@ public class ImageProcessor {
         }
 
         // After the for loop, print contents of m<<>> to file fname.
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream("Fname.txt"), true);
+            for(int col = 0; col < m.size(); col++)
+            {
+                for(int row = 0; row < m.get(col).size(); row++)
+                {
+
+                }
+            }
+
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
 
         return;
     }
+
+
+
+
+
+
 
 
 
