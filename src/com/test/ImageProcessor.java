@@ -443,13 +443,17 @@ public class ImageProcessor {
         }
 
         // After the for loop, print contents of m<<>> to file fname.
+        //Esteban mentions to store into a string which I will try to do
+        //Store into a string, then get the first two lines of the file?????
+        //Then write to file
         try {
             PrintWriter pw = new PrintWriter(new FileOutputStream("Fname.txt"), true);
+
             for(int col = 0; col < m.size(); col++)
             {
                 for(int row = 0; row < m.get(col).size(); row++)
                 {
-
+                    pw.write(m.get(row).get(col).getR() + " " + m.get(row).get(col).getG() + " " + m.get(row).get(col).getB());
                 }
             }
 
