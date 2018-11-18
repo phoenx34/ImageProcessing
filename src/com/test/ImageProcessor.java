@@ -1,6 +1,6 @@
 package com.test;
+
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class ImageProcessor {
@@ -126,7 +126,8 @@ public class ImageProcessor {
 
         m = new ArrayList<>();
         fileParse(FName);
-        populateGraph(getImportance());
+        this.I = getImportance();
+        populateGraph(this.I);
     }
 
     private void fileParse(String FName)
@@ -295,9 +296,14 @@ public class ImageProcessor {
             for (int j = 0; j < W; j++) {
                 p = m.get(i).get(j);
                 B.add(j, getPixelImportance(p));
+                m.get(i).get(j).setVisited(false);
+                m.get(i).get(j).setDist(Integer.MAX_VALUE);
             }
-            I.add(i, B);
+            ArrayList<Integer> temp = (ArrayList<Integer>) B.clone();
+            I.add(i, temp);
+            B.clear();
         }
+        this.I = I;
         return I;
     }
 
@@ -305,6 +311,8 @@ public class ImageProcessor {
 
 
     ArrayList<Pixel> MinVC() {
+        I.clear();
+        I = getImportance();
         Set<Pixel> S1 = new HashSet<>();
         Set<Pixel> S2 = new HashSet<>();
 
@@ -440,8 +448,8 @@ public class ImageProcessor {
     }
 
     void writeReduced(int k, String fname) {
-        I = getImportance();
         for (int i = 0; i < k; i++) {
+            I = getImportance();
             removeAndUpdate();
         }
 
