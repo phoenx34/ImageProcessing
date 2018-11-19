@@ -3,9 +3,25 @@ package com.test;
 import java.io.*;
 import java.util.*;
 
-public class ImageProcessor {
+/**
+ * This class takes some file containing pixel data
+ * relating to an image and downsizes said image/data
+ * while preserving the original's quality as much
+ * as possible. This will do downsizing of the width
+ * only; it will not change the height of the image.
+ *
+ * @author Marc Isaac (misaac34@iastate.edu)
+ * @author Christian Hernandez (cah1@iastate.edu)
+ */
 
-    public class Pixel implements Comparable<Pixel> {
+class ImageProcessor {
+
+    /**
+     * This class represents an individual pixel in the image.
+     * It consists of R,G,B values and X,Y values for each
+     * pixel as well as a distance value and visited bool.
+     */
+    private class Pixel implements Comparable<Pixel> {
         int x, y, r, g, b, dist;
         boolean visited;
         Pixel(int r, int g, int b, int x, int y) {
@@ -18,47 +34,43 @@ public class ImageProcessor {
             this.visited = false;
         }
 
-        public int getDist() {
+        int getDist() {
             return dist;
         }
 
-        public boolean getVisited() {
+        boolean getVisited() {
             return visited;
         }
 
-        public void setVisited(boolean visited) {
+        void setVisited(boolean visited) {
             this.visited = visited;
         }
 
-        public void setDist(int dist) {
+        void setDist(int dist) {
             this.dist = dist;
         }
 
-        public int getR() {
+        int getR() {
             return r;
         }
 
-        public int getB() {
+        int getB() {
             return b;
         }
 
-        public int getG() {
+        int getG() {
             return g;
         }
 
-        public int getX() {
+        int getX() {
             return x;
         }
 
-        public void setY(int y) {
+        void setY(int y) {
             this.y = y;
         }
 
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public int getY() {
+        int getY() {
             return y;
         }
 
@@ -80,17 +92,11 @@ public class ImageProcessor {
 
         @Override
         public int compareTo(Pixel q) {
-            if (this.getDist() < q.getDist()) {
-                return -1;
-            } else if (this.getDist() == q.getDist()) {
-                return 0;
-            } else {
-                return 1;
-            }
+            return Integer.compare(this.getDist(), q.getDist());
         }
     }
 
-    public class Edge {
+    private class Edge {
         Pixel src, dest;
         int weight;
 
@@ -98,10 +104,6 @@ public class ImageProcessor {
             this.src = src;
             this.dest = dest;
             this.weight = weight;
-        }
-
-        Pixel getSrc() {
-            return src;
         }
 
         Pixel getDest() {
@@ -113,13 +115,25 @@ public class ImageProcessor {
         }
     }
 
-    ArrayList<ArrayList<Pixel>> m;
-    HashMap<Pixel, Set<Edge>> adj = new HashMap<>();
+    // This is the 2D array we will store all the pixels in.
+    private ArrayList<ArrayList<Pixel>> m;
+    // This contains a list of each pixel in m and their respective adjacent edges.
+    private HashMap<Pixel, Set<Edge>> adj = new HashMap<>();
+    // Height and Width values
     private static int H, W;
-    ArrayList<ArrayList<Integer>> I;
+    // This is a 2D array of integer values representing the pixel's importance at
+    // its specific x and y coordinate.
+    private ArrayList<ArrayList<Integer>> I;
 
-
-    public ImageProcessor(String FName)
+    /**
+     * This is the constructor for ImageProcessor.
+     * It takes a file name as input and:
+     *  - Constructs a 2D arraylist of pixels
+     *  - Constructs a corresponding 2D Arraylist of pixel's importance\
+     *  - Populates a graph with edge weights corresponding to importance of pixels
+     * @param FName file name of data file
+     */
+    ImageProcessor(String FName)
     {
         if (FName == null)
             throw new NullPointerException("File is empty or non-existent");
@@ -130,10 +144,15 @@ public class ImageProcessor {
         populateGraph(this.I);
     }
 
+    /**
+     * This parses data from file and
+     * populates a 2D ArrayList of pixels
+     * corresponding to this data.
+     *
+     * @param FName File name of input data
+     */
     private void fileParse(String FName)
     {
-//        //Is this the correct delimeter to use?????????
-//        String delimiters = "[ ]+";
 
         File inputFile = new File (FName);
 
@@ -190,9 +209,16 @@ public class ImageProcessor {
 
     }
 
-    Set<Edge> e = new HashSet<>();
+    // Set containing all edges used. May or may not be necessary for final calculations/output,
+    // but was left in because it was useful for debugging.
+    private Set<Edge> e = new HashSet<>();
 
-    void populateGraph(ArrayList<ArrayList<Integer>> I) {
+    /**
+     * Populates a graph based on the contents of our Importance matrix
+     * and fills an adjacency list.
+     * @param I Our importance matrix
+     */
+    private void populateGraph(ArrayList<ArrayList<Integer>> I) {
         Edge e1, e2, e3;
         Set<Edge> adjacent;
         for (int i = 0; i < H - 1; i++) {
@@ -234,17 +260,27 @@ public class ImageProcessor {
         }
     }
 
-    void adjPop() {
-
-    }
-
-
-    int getPDist(Pixel p, Pixel q) {
+    /**
+     * Calculates a distance int between two given pixels (p, q)
+     * using the equation as per the spec:
+     * dist = (p.R - q.R)^2 + (p.G - q.G)^2 + (p.B - q.B)^2
+     * @param p the first pixel
+     * @param q the second pixel
+     * @return dist between the two pixels given by the equation above
+     */
+    private int getPDist(Pixel p, Pixel q) {
         double dist = Math.pow(p.getR() - q.getR(), 2) + Math.pow(p.getG() - q.getG(), 2) + Math.pow(p.getB() - q.getB(), 2);
         return (int) dist;
     }
 
-    int getYImportance(Pixel p) {
+    /**
+     * Calculates a given Pixel's
+     * Y-Importance as per the
+     * program specifications
+     * @param p The pixel to be calculated
+     * @return the Y-Importance for Pixel p
+     */
+    private int getYImportance(Pixel p) {
         Pixel q,r;
         if (p.getX() == 0) {
             q = m.get(H - 1).get(p.getY());
@@ -261,7 +297,14 @@ public class ImageProcessor {
         }
     }
 
-    int getXImportance(Pixel p)
+    /**
+     * Calculates a given Pixel's
+     * X-Importance as per the
+     * program specifications
+     * @param p The pixel to be calculated
+     * @return the X-Importance for Pixel p
+     */
+    private int getXImportance(Pixel p)
     {
         Pixel q,r;
         if (p.getY() == 0) {
@@ -279,7 +322,14 @@ public class ImageProcessor {
         }
     }
 
-    int getPixelImportance(Pixel p) {
+    /**
+     * Gets the importance of a specific pixel.
+     * This importance represents the particular pixel's
+     * importance value in the importance array, I
+     * @param p the pixel to be calculated
+     * @return the importance of pixel p
+     */
+    private int getPixelImportance(Pixel p) {
         return getXImportance(p) + getYImportance(p);
     }
 
@@ -288,7 +338,7 @@ public class ImageProcessor {
      * and return a 2d array of said importance
      * @return
      */
-    ArrayList<ArrayList<Integer>> getImportance() {
+    private ArrayList<ArrayList<Integer>> getImportance() {
         ArrayList<Integer> B = new ArrayList<>();
         Pixel p;
         ArrayList<ArrayList<Integer>> I = new ArrayList<>();
@@ -307,10 +357,15 @@ public class ImageProcessor {
         return I;
     }
 
-
-
-
-    ArrayList<Pixel> MinVC() {
+    /**
+     * Calculates the minimum vertical cut of pixels
+     * in the graph using a variation of the S2S
+     * method in WGraph.
+     * S1 is the first row of pixels
+     * S2 is the last row of pixels
+     * @return An arraylist of pixels that represents the minimum vertical cut
+     */
+    private ArrayList<Pixel> MinVC() {
         I.clear();
         I = getImportance();
         Set<Pixel> S1 = new HashSet<>();
@@ -357,8 +412,6 @@ public class ImageProcessor {
             }
 
             // TOP OF QUEUE WILL CONTAIN VALUES IN SAME LAYER AS STARTING. ONLY ADD VERT'S TO CURPATH IF NOT IN SAME LAYER
-            // COPY THIS PLEASE LEAVE A COPY UNCHANGED FOR ME TO RESUME WORK TM
-            // CURRENT PROBLEMS: CurPath wiping unexpectedly, dist of destination vertex not correct, and vertices in same layer both added to curpath
 
 //            curPath.add(u.getX());
 //            curPath.add(u.getY());
@@ -411,14 +464,6 @@ public class ImageProcessor {
                     queue.addAll(S1);
                 }
 
-
-//                if (S1.contains(v)) {
-//                    v.setDist(0);
-//                    curPath.clear();
-//                    curPath.add(v);
-//                    break;
-//                }
-
             }
         }
 
@@ -426,9 +471,19 @@ public class ImageProcessor {
 
     }
 
-    void removeAndUpdate() {
-        // Needs testing. Should remove the values in path from M<<>>
-        // then update the x and y coords of all nodes after the one removed correctly
+    /**
+     * This helper method takes care of updating our data to
+     * maintain functionality and accuracy after the removal
+     * of a given vertical cut (from minVC()).
+     *
+     *  - removes the given pixel and index from m<<>> and I<<>>
+     *    respectively.
+     *  - Updates other pixels' x and y values to respect the removal of said pixel
+     *  - Clears the adjacency array
+     *  - Updates the width of our graph
+     *  - And populates the adjacency list again with our new Importance array, I.
+     */
+    private void removeAndUpdate() {
 
         ArrayList<Pixel> path = MinVC();
         for (Pixel p : path) {
@@ -447,6 +502,14 @@ public class ImageProcessor {
 
     }
 
+    /**
+     * Resizes an image by k where k is a column of pixels to be
+     * removed. Say k = 3, then the image will shrink 3 columns
+     * and we will print the resulting image data to fname
+     * in the same format as our input image data.
+     * @param k the number of columns we will shrink the image by
+     * @param fname the file name that we write our output to
+     */
     void writeReduced(int k, String fname) {
         for (int i = 0; i < k; i++) {
             I = getImportance();
@@ -454,9 +517,6 @@ public class ImageProcessor {
         }
 
         // After the for loop, print contents of m<<>> to file fname.
-        //Esteban mentions to store into a string which I will try to do
-        //Store into a string, then get the first two lines of the file?????
-        //Then write to file
 
         File f = new File(fname);
         PrintWriter pw = null;
@@ -470,7 +530,6 @@ public class ImageProcessor {
                 for(int col = 0; col < W; col++)
 
                 {
-                    //Do I need getR, getG, and getB?
                     pw.write(m.get(row).get(col).getR() + " " + m.get(row).get(col).getG() + " " + m.get(row).get(col).getB() + " ");
                 }
                 pw.println();

@@ -13,17 +13,13 @@ import java.util.*;
  * and sets of vertices.
  *
  * @author Marc Isaac (misaac34@iastate.edu)
- * @author Christian Hernandez(cah1@iastate.edu)
+ * @author Christian Hernandez (cah1@iastate.edu)
  */
 class WGraph {
 
     /**
      * This class consists of an x and y coordinate,
      * and a list of all adjacent vertices to this node.
-     *
-     * Need to figure out what getter and setters we actually use
-     * also need to fix the public declarations
-     * Usually do both of these at the end of the project
      */
     private class Node implements Comparable<Node>{
         int x, y, index, dist;
@@ -146,9 +142,8 @@ class WGraph {
     }
 
     /**
-     * Currently everything is working upon basic testing besides the adjacency map.
-     * However, each node will have a set of neighbors which is correct based on the edges
-     * given in the file. All that is left to do is translate that set of neighbors into an adjacency list (map)
+     * Populates a graph based on the contents of FName
+     *
      * @param FName The file name
      */
     private void populateGraph(String FName) {
@@ -236,6 +231,9 @@ class WGraph {
         }
     }
 
+    /**
+     * Helper method that populates our Hashmap adjaceny list
+     */
     private void adjPop() {
         for (Node v : nodes) {
             if (adj.isEmpty() || !adj.containsKey(v)) {
@@ -246,7 +244,6 @@ class WGraph {
 
     /**
      * Correctly outputs the shortest path's total weight if one exists
-     *
      *
      * Efficiency: O(log(V)(V+E))
      *
@@ -300,10 +297,17 @@ class WGraph {
     }
 
     /**
-     * This is just simple dijkstra's to get shortest path from source to a set of vertices.
+     * This is just dijkstra's to get shortest path from source to a set of vertices.
      * Assuming the above implementation for the shortest path from a given vertex
      * to another vertex is correct, we must only remove the catch checking if a given
      * adjacent vertex is equal to the destination.
+     *
+     * Upon further analysis, we must use a Hashtable to store
+     * possible shortest paths and use a dynamically updating variable,
+     * minCost, to get the minimum cost path in the Hashtable after
+     * the while loop finishes executing.
+     *
+     * A similar approach is used in S2S.
      *
      * Efficiency: O(Log(V)(V+E))
      *
@@ -377,7 +381,14 @@ class WGraph {
         return null;
     }
 
-    public ArrayList<Integer> N2INT(ArrayList<Node> q) {
+    /**
+     * Helper method used to convert
+     * an ArrayList<Node> to
+     * an ArrayList<Integer>
+     * @param q The arraylist to convert
+     * @return The converted arraylist
+     */
+    private ArrayList<Integer> N2INT(ArrayList<Node> q) {
         ArrayList<Integer> r = new ArrayList<>();
         for (int i = 0; i < q.size(); i += 1) {
             r.add(q.get(i).getX());
