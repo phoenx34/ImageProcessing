@@ -8,9 +8,9 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-        ImageProcessor fuckMe = new ImageProcessor("graphinput.txt");
-        String fuck = "Fname.txt";
-        fuckMe.writeReduced(2, fuck);
+        ImageProcessor proc = new ImageProcessor("graphinput.txt");
+        String text = "Fname.txt";
+        proc.writeReduced(2, text);
         /*WGraph graph = new WGraph("graphinput.txt");
         ArrayList<Integer> S1 = new ArrayList<>();
         ArrayList<Integer> S2 = new ArrayList<>();
